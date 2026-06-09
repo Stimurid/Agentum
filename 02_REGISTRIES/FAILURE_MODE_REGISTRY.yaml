@@ -246,7 +246,7 @@ failures:
     guards:
       - "PROTECTED_VALUES.md"
       - "safe-batch.md protected_seed_files"
-      - "stop_guard.py protected seed TODO"
+      - "stop_guard.py protected seed review"
     eval_scenarios:
       - "EVAL-03 manual seed overwrite"
     sources:
@@ -325,7 +325,7 @@ failures:
     guards:
       - "Surgical change contract"
       - "safe-batch non_goals"
-      - "stop_guard.py touched files TODO"
+      - "stop_guard.py touched files review"
     eval_scenarios:
       - "EVAL-02 safe batch"
       - "EVAL-03 manual seed overwrite"

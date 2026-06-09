@@ -570,7 +570,7 @@ patterns:
       - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
       - "06_EVALS/EVAL_SCENARIOS.md"
     adaptation:
-      claude_code: "Stop guard TODO detects mock/silent fallback."
+      claude_code: "Stop guard checks unsupported completion and fallback-style claims."
       codex: "Final status must report failures."
       project: "ModerBober profile needs live-provider caution."
     risks:

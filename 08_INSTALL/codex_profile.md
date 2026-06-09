@@ -1,9 +1,25 @@
 # codex_profile
 
-Codex install notes for `v0_minimal`:
+This document explains how `v0_minimal` should be adapted for Codex-like environments.
 
-- treat `AGENTS.md` as portable context
-- rely on sandbox, approvals, and wrapper rules for hard constraints
+## Main distinction
+
+Portable `AGENTS.md` gives context.
+Sandbox, approvals, wrappers, and local validation provide harder constraints.
+
+## Use
+
 - keep runtime files compact
-- copy only the profile slice needed by the target repo
-- run the same eval prompts after install
+- keep repo-specific install profile explicit
+- adapt hook/command concepts to available local tooling
+- do not pretend a copied Claude-oriented settings file is automatic Codex enforcement
+
+## Limits
+
+Context-only files do not block unsafe action on their own.
+
+## Validation
+
+- verify local command model
+- run proving-ground prompts manually
+- inspect bounded batch behavior before trusting the install

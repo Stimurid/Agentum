@@ -1,19 +1,39 @@
-﻿# OS / editor
+# OS / editor
 .DS_Store
 Thumbs.db
+Desktop.ini
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Logs / temp
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Logs / temp / backups
 *.log
+*.tmp
+*.bak
+*~
 tmp/
 temp/
+logs/
+
+# Build / cache junk
+build/
+dist/
+.cache/
 
 # Secrets
 .env
 .env.*
 secrets/
 **/secrets/
+*.pem
+*.key
 
-# Local-only Claude settings
+# Local-only tool settings
 .claude/settings.local.json

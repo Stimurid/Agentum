@@ -1,9 +1,25 @@
 # claude_code_profile
 
-Claude Code install notes for `v0_minimal`:
+This document explains how `v0_minimal` should be adapted for Claude Code.
 
-- `AGENTS.md` and `CLAUDE.md` are readable context, not hard enforcement
-- use `.claude/settings.json` as a conservative template, then validate schema locally
-- keep hooks quiet and local
-- do not auto-approve destructive git, secret-touching, deploy, or dependency-install actions
-- run eval prompts after install
+## Main distinction
+
+`AGENTS.md` and `CLAUDE.md` are context surfaces.
+Hooks, settings, permissions, sandboxing, and evals are stronger runtime guard surfaces.
+
+## Use
+
+- keep root files compact
+- use `.claude/settings.json` as template-only unless schema is validated locally
+- keep hooks quiet, dependency-free, and local
+- do not auto-approve destructive git, secret, deploy, or dependency-install actions
+
+## Limits
+
+Claude Code markdown instructions are not hard enforcement by themselves.
+
+## Validation
+
+- hook syntax check
+- proving-ground prompts
+- local approval review before target install

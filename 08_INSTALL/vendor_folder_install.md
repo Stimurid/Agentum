@@ -1,8 +1,21 @@
 # vendor_folder_install
 
-Use vendor-folder install when the target repo should own its local copy.
+Use vendor-folder install when the target repo should own a local copy of the kit slice.
 
-- copy only compact runtime files and the chosen profile
-- do not vendor the research archive
-- record which version of `v0_minimal` was copied
-- rerun eval prompts inside the target repo after copy
+## Pros
+
+- target repo owns its guard files
+- easy local patching
+- no cross-repo coupling at runtime
+
+## Cons
+
+- updates are manual
+- drift is likely if provenance is not recorded
+
+## Rules
+
+- vendor only compact runtime files
+- record source commit of `protected-agent-kit`
+- rerun proving-ground after copy
+- never vendor the full research archive
