@@ -1,0 +1,1530 @@
+﻿# SOURCE_REGISTRY.yaml
+#
+# Source registry for protected-agent-kit.
+#
+# This file preserves the research body behind the kit.
+# It is not a runtime prompt and should not be copied wholesale into target projects.
+#
+# Schema:
+# - id: stable source id
+#   title: source title
+#   type: official_docs | github_repo | blog | paper | security_research | drive_doc | personal_memory | chat_research
+#   url: external URL when available
+#   wave: wave where it was collected
+#   level: context_only | policy_like | workflow_artifact | runtime_guard | sandbox_permission | eval_postmortem | security | memory_recovery | architecture_guard
+#   key_use: why it matters
+#   take: what to adapt
+#   do_not_copy: what not to blindly copy
+#   status: keep | maybe | reference | dangerous | drop
+#   confidence: high | medium | low
+#   notes: optional notes
+
+sources:
+
+  # ------------------------------------------------------------
+  # WAVE 1 — Official formats and runtime mechanisms
+  # ------------------------------------------------------------
+
+  - id: S1-01
+    title: "Claude Code Memory / CLAUDE.md"
+    type: official_docs
+    url: "https://docs.anthropic.com/en/docs/claude-code/memory"
+    wave: 1
+    level: context_only
+    key_use: "Establishes CLAUDE.md and memory files as context, not hard enforcement."
+    take:
+      - "Use CLAUDE.md as guidance and project memory."
+      - "Do not rely on CLAUDE.md alone for safety-critical behavior."
+    do_not_copy:
+      - "Do not treat CLAUDE.md as a physical guardrail."
+    status: keep
+    confidence: high
+    notes: "Foundation for context-only vs runtime-guard distinction."
+
+  - id: S1-02
+    title: "Claude Code Settings"
+    type: official_docs
+    url: "https://docs.anthropic.com/en/docs/claude-code/settings"
+    wave: 1
+    level: sandbox_permission
+    key_use: "Documents settings, permissions, deny/ask rules, hooks, and configuration layers."
+    take:
+      - "Use .claude/settings.json for project-level hooks and permissions."
+      - "Use deny rules for secrets and destructive actions."
+    do_not_copy:
+      - "Do not use auto-approval or broad permissions as default."
+    status: keep
+    confidence: high
+
+  - id: S1-03
+    title: "Claude Code Hooks"
+    type: official_docs
+    url: "https://docs.anthropic.com/en/docs/claude-code/hooks"
+    wave: 1
+    level: runtime_guard
+    key_use: "Documents lifecycle hook events such as UserPromptSubmit, PreToolUse, PostToolUse, Stop, InstructionsLoaded, and FileChanged."
+    take:
+      - "Use UserPromptSubmit for prompt quarantine."
+      - "Use PreToolUse for Bash/tool gating."
+      - "Use Stop for completion/fake-done checks."
+    do_not_copy:
+      - "Do not create verbose hooks that inject large outputs into model context."
+    status: keep
+    confidence: high
+
+  - id: S1-04
+    title: "Claude Code Subagents"
+    type: official_docs
+    url: "https://docs.anthropic.com/en/docs/claude-code/sub-agents"
+    wave: 1
+    level: workflow_artifact
+    key_use: "Shows subagents as scoped roles with possible tool restrictions."
+    take:
+      - "Subagents can be useful later for architect, UX reviewer, and failure analyst roles."
+    do_not_copy:
+      - "Do not start v0 with subagent swarm or always-on multi-agent review."
+    status: maybe
+    confidence: high
+
+  - id: S1-05
+    title: "Claude Code Output Styles"
+    type: official_docs
+    url: "https://docs.anthropic.com/en/docs/claude-code/output-styles"
+    wave: 1
+    level: policy_like
+    key_use: "Clarifies that style changes are not runtime enforcement."
+    take:
+      - "Anti-slop style can support work quality."
+    do_not_copy:
+      - "Do not mistake personality/style for safety."
+    status: reference
+    confidence: high
+
+  - id: S1-06
+    title: "OpenAI Codex AGENTS.md Guide"
+    type: official_docs
+    url: "https://developers.openai.com/codex/guides/agents-md"
+    wave: 1
+    level: context_only
+    key_use: "Documents AGENTS.md discovery chain, overrides, and project instruction behavior."
+    take:
+      - "Use AGENTS.md as portable root operating contract."
+      - "Keep critical rules near the top."
+    do_not_copy:
+      - "Do not treat AGENTS.md as a hard guard."
+    status: keep
+    confidence: high
+
+  - id: S1-07
+    title: "OpenAI Codex Config Reference"
+    type: official_docs
+    url: "https://developers.openai.com/codex/config-reference"
+    wave: 1
+    level: sandbox_permission
+    key_use: "Documents config options such as project_doc_max_bytes and fallback filenames."
+    take:
+      - "Keep root AGENTS.md short."
+      - "Move long theory and registries outside runtime context."
+    do_not_copy:
+      - "Do not create giant AGENTS.md manifest."
+    status: keep
+    confidence: high
+
+  - id: S1-08
+    title: "AGENTS.md open format"
+    type: github_repo
+    url: "https://github.com/agentsmd/agents.md"
+    wave: 1
+    level: context_only
+    key_use: "Defines AGENTS.md as a README-like convention for agents."
+    take:
+      - "Use AGENTS.md for cross-agent portability."
+    do_not_copy:
+      - "Do not make it a vague onboarding README."
+    status: keep
+    confidence: high
+
+  - id: S1-09
+    title: "Cursor Rules Documentation"
+    type: official_docs
+    url: "https://cursor.com/docs/rules"
+    wave: 1
+    level: context_only
+    key_use: "Shows persistent project/team/user rules and AGENTS.md support."
+    take:
+      - "Use path/topic-scoped rules when adapting to Cursor."
+    do_not_copy:
+      - "Do not rely on legacy .cursorrules collections as safety system."
+    status: maybe
+    confidence: medium
+
+  - id: S1-10
+    title: "GitHub Copilot Custom Instructions"
+    type: official_docs
+    url: "https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot"
+    wave: 1
+    level: context_only
+    key_use: "Documents Copilot instruction files and AGENTS.md compatibility."
+    take:
+      - "Consider .github/copilot-instructions.md later as an adapter."
+    do_not_copy:
+      - "Do not create competing instruction sources without authority boundaries."
+    status: reference
+    confidence: medium
+
+  - id: S1-11
+    title: "VS Code Copilot Custom Instructions"
+    type: official_docs
+    url: "https://code.visualstudio.com/docs/copilot/customization/custom-instructions"
+    wave: 1
+    level: context_only
+    key_use: "Documents how custom instructions are added to chat context."
+    take:
+      - "Useful for future VS Code adapter."
+    do_not_copy:
+      - "Do not mistake IDE instructions for runtime enforcement."
+    status: reference
+    confidence: medium
+
+  - id: S1-12
+    title: "Gemini CLI Configuration"
+    type: official_docs
+    url: "https://google-gemini.github.io/gemini-cli/docs/get-started/configuration.html"
+    wave: 1
+    level: sandbox_permission
+    key_use: "Documents settings precedence and .gemini/settings.json."
+    take:
+      - "Future Gemini profile can follow same separation of context and settings."
+    do_not_copy:
+      - "Do not support every agent ecosystem before v0 works."
+    status: reference
+    confidence: medium
+
+  - id: S1-13
+    title: "OpenClaw AGENTS.md"
+    type: github_repo
+    url: "https://github.com/openclaw/openclaw/blob/main/AGENTS.md"
+    wave: 1
+    level: policy_like
+    key_use: "Practical AGENTS.md with no guessing and relevant-docs-only principles."
+    take:
+      - "Read relevant docs only."
+      - "No guesses about API/default/error/timing behavior."
+    do_not_copy:
+      - "Do not import OpenClaw repo-specific conventions blindly."
+    status: keep
+    confidence: high
+
+  - id: S1-14
+    title: "OpenClaw coding-agent skill"
+    type: github_repo
+    url: "https://github.com/openclaw/openclaw/blob/main/skills/coding-agent/SKILL.md"
+    wave: 1
+    level: workflow_artifact
+    key_use: "Shows delegation to coding workers only for real coding work, not lookup."
+    take:
+      - "Delegate only when task class requires coding work."
+    do_not_copy:
+      - "Do not launch background workers without cost guard."
+    status: maybe
+    confidence: medium
+
+  - id: S1-15
+    title: "Configuring Agentic AI Coding Tools in the Wild"
+    type: paper
+    url: "https://arxiv.org/abs/2602.14690"
+    wave: 1
+    level: eval_postmortem
+    key_use: "Empirical landscape of configuration mechanisms across agentic coding tools."
+    take:
+      - "Do not stop at context files."
+      - "Treat skills/subagents/hooks as separate mechanisms."
+    do_not_copy:
+      - "Do not consider a repo mature just because it has AGENTS.md."
+    status: keep
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 2 — Public best practices and community artifacts
+  # ------------------------------------------------------------
+
+  - id: S2-01
+    title: "Karpathy-inspired CLAUDE.md / andrej-karpathy-skills"
+    type: github_repo
+    url: "https://github.com/multica-ai/andrej-karpathy-skills/blob/main/CLAUDE.md"
+    wave: 2
+    level: policy_like
+    key_use: "Concise anti-overengineering principles: think before coding, simplicity, no speculative features."
+    take:
+      - "Caution over speed."
+      - "State assumptions."
+      - "No speculative features."
+      - "Prefer simpler implementation."
+    do_not_copy:
+      - "Do not treat as safety system."
+      - "Do not copy as if official Karpathy config."
+    status: keep
+    confidence: high
+
+  - id: S2-02
+    title: "golden-CLAUDE.md"
+    type: github_repo
+    url: "https://github.com/Z-M-Huang/golden-CLAUDE.md/blob/main/CLAUDE.md"
+    wave: 2
+    level: policy_like
+    key_use: "Stop-and-rethink, no silent fallback, no unrelated changes."
+    take:
+      - "If corrected repeatedly, stop and rethink."
+      - "Do not suppress errors."
+    do_not_copy:
+      - "Do not copy uppercase emphasis as enforcement."
+    status: maybe
+    confidence: medium
+
+  - id: S2-03
+    title: "LinkedIn ambry CLAUDE.md"
+    type: github_repo
+    url: "https://github.com/linkedin/ambry/blob/master/CLAUDE.md"
+    wave: 2
+    level: policy_like
+    key_use: "Surgical change contract: touch only what you must."
+    take:
+      - "Clean up only your own mess."
+      - "Do not improve adjacent code opportunistically."
+    do_not_copy:
+      - "Do not import project-specific build/test rules."
+    status: keep
+    confidence: high
+
+  - id: S2-04
+    title: "SocketDev/socket-registry CLAUDE.md"
+    type: github_repo
+    url: "https://github.com/SocketDev/socket-registry/blob/main/CLAUDE.md"
+    wave: 2
+    level: policy_like
+    key_use: "Worktree hygiene, surgical staging, stop hooks."
+    take:
+      - "Dirty worktree reminders."
+      - "No orphaned staging."
+      - "No git add -A."
+    do_not_copy:
+      - "Do not copy fix-everything-you-see policy without scope guard."
+    status: maybe
+    confidence: high
+
+  - id: S2-05
+    title: "liberzon/claude-hooks"
+    type: github_repo
+    url: "https://github.com/liberzon/claude-hooks"
+    wave: 2
+    level: runtime_guard
+    key_use: "Compound Bash command decomposition before permission matching."
+    take:
+      - "Split &&, ||, ;, pipes, substitutions, and newlines."
+      - "Inspect each subcommand."
+    do_not_copy:
+      - "Do not install without Windows/WSL tests."
+    status: keep
+    confidence: high
+
+  - id: S2-06
+    title: "karanb192/claude-code-hooks"
+    type: github_repo
+    url: "https://github.com/karanb192/claude-code-hooks"
+    wave: 2
+    level: runtime_guard
+    key_use: "Hook templates with safety levels, event logging, and tests."
+    take:
+      - "Safety levels."
+      - "Event logger for hook payload discovery."
+      - "Protect secrets and block dangerous commands."
+    do_not_copy:
+      - "Do not require JS stack if Python is simpler."
+    status: keep
+    confidence: high
+
+  - id: S2-07
+    title: "iamrajiv/claude-code-hook-templates"
+    type: github_repo
+    url: "https://github.com/iamrajiv/claude-code-hook-templates"
+    wave: 2
+    level: runtime_guard
+    key_use: "Lifecycle hook mapping and templates."
+    take:
+      - "Use Stop for quality gates."
+      - "Use PreCompact for context preservation later."
+    do_not_copy:
+      - "Do not install every hook from template set."
+    status: keep
+    confidence: medium
+
+  - id: S2-08
+    title: "Gunnar Grosch Dev.to Claude Code hooks guide"
+    type: blog
+    url: "https://dev.to/gunnargrosch/automating-your-workflow-with-claude-code-hooks-389h"
+    wave: 2
+    level: runtime_guard
+    key_use: "Explains hooks as linter-like enforcement, CLAUDE.md as style guide."
+    take:
+      - "CLAUDE.md is style guide; hooks are linter."
+    do_not_copy:
+      - "Do not treat tutorial as full security design."
+    status: reference
+    confidence: medium
+
+  - id: S2-09
+    title: "Shrivu Shankar — How I Use Every Claude Code Feature"
+    type: blog
+    url: "https://blog.sshh.io/p/how-i-use-every-claude-code-feature"
+    wave: 2
+    level: workflow_artifact
+    key_use: "CLAUDE.md as tooling forcing function; simplify CLI instead of writing huge instructions."
+    take:
+      - "If tool needs long instructions, build wrapper."
+      - "Synchronize CLAUDE.md and AGENTS.md."
+    do_not_copy:
+      - "Do not adopt workflow without local environment check."
+    status: keep
+    confidence: high
+
+  - id: S2-10
+    title: "Hamel Husain claude-review-loop"
+    type: github_repo
+    url: "https://github.com/hamelsmu/claude-review-loop/blob/main/README.md"
+    wave: 2
+    level: workflow_artifact
+    key_use: "Stop-hook review gate and independent review loop."
+    take:
+      - "Stop hook can gate completion."
+      - "UX review can be a separate check."
+    do_not_copy:
+      - "Do not launch multiple Codex reviewers for trivial tasks."
+    status: keep
+    confidence: high
+
+  - id: S2-11
+    title: "Hamel Husain research-council"
+    type: github_repo
+    url: "https://github.com/hamelsmu/research-council"
+    wave: 2
+    level: workflow_artifact
+    key_use: "Cross-pollinated multi-agent research with skeptical verification."
+    take:
+      - "Independent reports can reveal blind spots."
+      - "Use cheap test mode."
+    do_not_copy:
+      - "Do not make multi-agent research default."
+    status: maybe
+    confidence: high
+
+  - id: S2-12
+    title: "awesome-claude-code"
+    type: github_repo
+    url: "https://github.com/hesreallyhim/awesome-claude-code"
+    wave: 2
+    level: workflow_artifact
+    key_use: "Ecosystem map of Claude Code agents, hooks, skills, tools."
+    take:
+      - "Use as discovery map."
+    do_not_copy:
+      - "Awesome-list status is not quality or safety proof."
+    status: reference
+    confidence: medium
+
+  - id: S2-13
+    title: "davila7/claude-code-templates"
+    type: github_repo
+    url: "https://github.com/davila7/claude-code-templates"
+    wave: 2
+    level: workflow_artifact
+    key_use: "Template marketplace structure for agents, commands, hooks, settings."
+    take:
+      - "Component taxonomy can inform kit layout."
+    do_not_copy:
+      - "Do not install template stacks wholesale."
+    status: reference
+    confidence: medium
+
+  - id: S2-14
+    title: "MuhammadUsmanGM/claude-code-best-practices"
+    type: github_repo
+    url: "https://github.com/MuhammadUsmanGM/claude-code-best-practices"
+    wave: 2
+    level: workflow_artifact
+    key_use: "Community wiki with cost management, linting, benchmark themes."
+    take:
+      - "Cost estimator and benchmark categories are useful."
+    do_not_copy:
+      - "Do not treat as high-authority source."
+    status: maybe
+    confidence: low
+
+  - id: S2-15
+    title: "Simon Willison — Living dangerously with Claude"
+    type: blog
+    url: "https://simonwillison.net/2025/Oct/22/living-dangerously-with-claude/"
+    wave: 2
+    level: eval_postmortem
+    key_use: "Shows YOLO/unattended autonomy as a high-autonomy practice and warning case."
+    take:
+      - "Distinguish default approvals from dangerous unattended autonomy."
+    do_not_copy:
+      - "Do not use YOLO/no-prompt as default for expensive unclear tasks."
+    status: dangerous
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 3 — Failure modes, security, token burn, eval
+  # ------------------------------------------------------------
+
+  - id: S3-01
+    title: "Claude Code PreToolUse exit-code issue"
+    type: github_repo
+    url: "https://github.com/anthropics/claude-code/issues/24327"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Hook denial can stop workflow unless denial includes recovery route."
+    take:
+      - "Block with safe alternative."
+      - "Use deny-and-continue framing."
+    do_not_copy:
+      - "Do not return vague forbidden messages."
+    status: keep
+    confidence: medium
+
+  - id: S3-02
+    title: "Claude Code Auto Mode engineering/product reports"
+    type: security_research
+    url: "https://www.anthropic.com/engineering/claude-code-auto-mode"
+    wave: 3
+    level: sandbox_permission
+    key_use: "Classifier-based permission middle path: block risky actions while allowing safe ones."
+    take:
+      - "Design guard as deny-and-continue."
+    do_not_copy:
+      - "Do not assume classifier eliminates risk."
+    status: keep
+    confidence: medium
+    notes: "If official URL changes, verify through current Anthropic docs/news."
+
+  - id: S3-03
+    title: "Measuring the Permission Gate / Auto Mode stress-test"
+    type: paper
+    url: "https://arxiv.org/abs/2604.04978"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Shows permission gates may miss file-edit side effects and ambiguous state changes."
+    take:
+      - "Add file-edit blast radius guard."
+    do_not_copy:
+      - "Do not treat shell permissions as sufficient."
+    status: keep
+    confidence: high
+
+  - id: S3-04
+    title: "Claude Code hook stdout token issue"
+    type: github_repo
+    url: "https://github.com/anthropics/claude-code/issues/41666"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Hook stdout can consume tokens and pollute context."
+    take:
+      - "Hooks should be quiet by default."
+      - "Verbose logs go to files."
+    do_not_copy:
+      - "Do not inject memory via hook stdout."
+    status: keep
+    confidence: medium
+
+  - id: S3-05
+    title: "Claude Code hooks not blocking on native Windows report"
+    type: personal_memory
+    url: ""
+    wave: 3
+    level: eval_postmortem
+    key_use: "Platform-specific hook reliability must be tested on Windows/WSL."
+    take:
+      - "Run environment capability audit before relying on hooks."
+    do_not_copy:
+      - "Do not generalize anecdote as universal bug."
+    status: maybe
+    confidence: low
+
+  - id: S3-06
+    title: "Claude Code token/stdout burn reports"
+    type: blog
+    url: "https://dev.to/ji_ai/claude-code-is-wasting-your-tokens-i-fixed-it-in-3-weeks-without-writing-a-single-line-of-code-4fen"
+    wave: 3
+    level: eval_postmortem
+    key_use: "High-stdout commands such as npm install, docker build, stacktraces can burn context."
+    take:
+      - "Bound stdout using quiet flags, head/tail, logs."
+    do_not_copy:
+      - "Do not create verbose diagnostic hooks."
+    status: keep
+    confidence: medium
+
+  - id: S3-07
+    title: "Anecdotal Claude token burn reports"
+    type: personal_memory
+    url: ""
+    wave: 3
+    level: eval_postmortem
+    key_use: "Broad context ingestion can burn 100k+ tokens quickly."
+    take:
+      - "No full-repo context without preflight."
+    do_not_copy:
+      - "Do not panic-ban Claude; control context."
+    status: maybe
+    confidence: low
+
+  - id: S3-08
+    title: "Unattended loop cost-burn reports"
+    type: personal_memory
+    url: ""
+    wave: 3
+    level: eval_postmortem
+    key_use: "Recurring loops without max_runs/max_cost can burn large budgets."
+    take:
+      - "Unattended loops require hard caps."
+    do_not_copy:
+      - "Do not run periodic agent tasks without cap."
+    status: keep
+    confidence: medium
+
+  - id: S3-09
+    title: "Codex ignores or misses AGENTS.md issues"
+    type: github_repo
+    url: "https://github.com/openai/codex/issues/6502"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Instruction loading can fail or be version/environment-dependent."
+    take:
+      - "Use audit-context before risky work."
+    do_not_copy:
+      - "Do not assume AGENTS.md was loaded."
+    status: keep
+    confidence: medium
+
+  - id: S3-10
+    title: "Codex AGENTS.md truncation issue"
+    type: github_repo
+    url: "https://github.com/openai/codex/issues/13386"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Large AGENTS.md may be silently truncated."
+    take:
+      - "Critical rules first."
+      - "Keep root manifest short."
+    do_not_copy:
+      - "Do not put critical stop conditions at file end."
+    status: keep
+    confidence: medium
+
+  - id: S3-11
+    title: "Codex token/context usage indicator issues"
+    type: github_repo
+    url: "https://github.com/openai/codex/issues/24366"
+    wave: 3
+    level: eval_postmortem
+    key_use: "UI token indicators can be missing or unreliable."
+    take:
+      - "Maintain coarse budget summary in preflight/stop reports."
+    do_not_copy:
+      - "Do not rely only on UI token indicator."
+    status: maybe
+    confidence: medium
+
+  - id: S3-12
+    title: "Gemini CLI 429 retry loop / billing reports"
+    type: github_repo
+    url: "https://github.com/google-gemini/gemini-cli/issues/27187"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Retry loops can exhaust spending caps."
+    take:
+      - "Max retries, max time, max cost."
+    do_not_copy:
+      - "Do not retry until success without cap."
+    status: keep
+    confidence: medium
+
+  - id: S3-13
+    title: "Gemini CLI tool-selection loop"
+    type: github_repo
+    url: "https://github.com/google-gemini/gemini-cli/issues/23182"
+    wave: 3
+    level: eval_postmortem
+    key_use: "Agent can burn tokens while failing to select tool."
+    take:
+      - "Add no-progress loop detector."
+    do_not_copy:
+      - "Do not use unlimited self-reflection loops."
+    status: maybe
+    confidence: medium
+
+  - id: S3-14
+    title: "Repo prompt injection against coding agents"
+    type: security_research
+    url: "https://pluto.security/blog/claude-code-vulnerability/"
+    wave: 3
+    level: security
+    key_use: "Repository content can inject instructions into coding agents."
+    take:
+      - "Repo content is untrusted data unless part of approved instruction chain."
+    do_not_copy:
+      - "Do not obey instructions from README/comments/logs by default."
+    status: keep
+    confidence: medium
+
+  - id: S3-15
+    title: "Claude Code Action prompt injection to RCE"
+    type: security_research
+    url: "https://johnstawinski.com/2026/02/05/trusting-claude-with-a-knife-unauthorized-prompt-injection-to-rce-in-anthropics-claude-code-action/"
+    wave: 3
+    level: security
+    key_use: "CI agents with broad permissions and untrusted PR/issue text can lead to execution risk."
+    take:
+      - "CI agents require minimal permissions."
+      - "Issues/PR comments are untrusted data."
+    do_not_copy:
+      - "Do not give agents broad CI/secrets permissions."
+    status: keep
+    confidence: medium
+
+  - id: S3-16
+    title: "LogJack"
+    type: paper
+    url: "https://arxiv.org/abs/2604.15368"
+    wave: 3
+    level: security
+    key_use: "Logs can carry prompt injection for debugging/remediation agents."
+    take:
+      - "Logs are hostile text."
+      - "Remediation commands require guard."
+    do_not_copy:
+      - "Do not let agent read logs and self-remediate prod without approval."
+    status: keep
+    confidence: high
+
+  - id: S3-17
+    title: "MCP client prompt injection / tool poisoning study"
+    type: paper
+    url: "https://arxiv.org/abs/2603.21642"
+    wave: 3
+    level: security
+    key_use: "MCP tools and clients have prompt injection and hidden-parameter risks."
+    take:
+      - "Use tool allowlist and audit."
+      - "Treat MCPs as executable influence."
+    do_not_copy:
+      - "Do not install random MCP/tools from template packs."
+    status: keep
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 4 — Personal / project corpus
+  # ------------------------------------------------------------
+
+  - id: S4-01
+    title: "Personal rule: budget/tokens/credits are project resources"
+    type: personal_memory
+    url: ""
+    wave: 4
+    level: policy_like
+    key_use: "Budget guard is a core protected value."
+    take:
+      - "Expose cost risk before expensive work."
+      - "Treat stdout/subagents/retries as budget surfaces."
+    do_not_copy:
+      - "Do not paralyze work; bound it."
+    status: keep
+    confidence: high
+
+  - id: S4-02
+    title: "Personal rule: хватит мелкодрочки means bounded batch"
+    type: personal_memory
+    url: ""
+    wave: 4
+    level: workflow_artifact
+    key_use: "User pressure to stop microtasking must route to safe-batch, not rewrite."
+    take:
+      - "Create safe-batch command."
+    do_not_copy:
+      - "Do not interpret as full rewrite permission."
+    status: keep
+    confidence: high
+
+  - id: S4-03
+    title: "Personal rule: do not assign mechanical filesystem work to user"
+    type: personal_memory
+    url: ""
+    wave: 4
+    level: workflow_artifact
+    key_use: "Agents should do safe mechanical file operations instead of asking user."
+    take:
+      - "User role is direction, approval, review, decisions."
+    do_not_copy:
+      - "Do not give agent unbounded filesystem power."
+    status: keep
+    confidence: high
+
+  - id: S4-04
+    title: "Personal rule: preserve manual seed work"
+    type: personal_memory
+    url: ""
+    wave: 4
+    level: policy_like
+    key_use: "Manually curated seed work is protected."
+    take:
+      - "Use seed markers and protected paths."
+    do_not_copy:
+      - "Do not preserve garbage as sacred; use patch-proposal mode."
+    status: keep
+    confidence: high
+
+  - id: S4-05
+    title: "Litops structure document"
+    type: drive_doc
+    url: ""
+    wave: 4
+    level: architecture_guard
+    key_use: "Litops is source/corpus machine, not folder structure."
+    take:
+      - "INBOX/RAW/VAULT/REGISTRY boundaries."
+      - "Source/occurrence/drop/workset distinctions."
+    do_not_copy:
+      - "Do not reduce Litops to Obsidian folders."
+    status: keep
+    confidence: high
+
+  - id: S4-06
+    title: "Litops prompt body templates"
+    type: drive_doc
+    url: ""
+    wave: 4
+    level: architecture_guard
+    key_use: "Prompt-body anatomy: protected value, risk, output contract, failure modes, trace."
+    take:
+      - "Use prompt-body anatomy for commands/agents."
+      - "No universal template."
+    do_not_copy:
+      - "Do not insert whole policy/registry into runtime prompts."
+    status: keep
+    confidence: high
+
+  - id: S4-07
+    title: "Litops prompt body registry"
+    type: drive_doc
+    url: ""
+    wave: 4
+    level: architecture_guard
+    key_use: "Anti-token-tumor prompt assembly policy."
+    take:
+      - "Use context injection levels."
+      - "Do not assemble full constitution + registry + memory + task."
+    do_not_copy:
+      - "Do not load everything for safety."
+    status: keep
+    confidence: high
+
+  - id: S4-08
+    title: "COMPILER+REINJECT / мозги страшилы"
+    type: drive_doc
+    url: ""
+    wave: 4
+    level: policy_like
+    key_use: "Anti-slop, self-check, frame-slip detection, research integrity over service compliance."
+    take:
+      - "Translate into operational temperament."
+      - "Use self-check and anti-service drift."
+    do_not_copy:
+      - "Do not imitate style or aggression."
+    status: keep
+    confidence: high
+
+  - id: S4-09
+    title: "ModerBober runtime facts"
+    type: personal_memory
+    url: ""
+    wave: 4
+    level: architecture_guard
+    key_use: "ModerBober requires production caution, no secrets exposure, no feature drift."
+    take:
+      - "Create ModerBober profile with production caution."
+    do_not_copy:
+      - "Do not mix ModerBober rules into Litops."
+    status: keep
+    confidence: high
+
+  - id: S4-10
+    title: "Shared VM project-boundary facts"
+    type: personal_memory
+    url: ""
+    wave: 4
+    level: architecture_guard
+    key_use: "Shared infrastructure creates project bleed risk."
+    take:
+      - "Project boundary guard: active project, path, service, domain."
+    do_not_copy:
+      - "Do not assume all paths on one VM belong to current project."
+    status: keep
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 4B — WhiteCrow / Quinta / boundary / wallet
+  # ------------------------------------------------------------
+
+  - id: S4B-01
+    title: "WhiteCrow export builder"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: architecture_guard
+    key_use: "Bridge/export operations are not generation; they package existing field, anchors, tensions, lineage."
+    take:
+      - "Bridge operation contract."
+      - "Do not invent missing source material."
+    do_not_copy:
+      - "Do not make export a new text generation."
+    status: keep
+    confidence: high
+
+  - id: S4B-02
+    title: "Litops operation/organ catalog"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: architecture_guard
+    key_use: "Map transitions and risks, not list bots."
+    take:
+      - "Create transition catalog before subagents."
+    do_not_copy:
+      - "Do not create agent zoo."
+    status: keep
+    confidence: high
+
+  - id: S4B-03
+    title: "Quinta / FifthConstraint intake scenario"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: workflow_artifact
+    key_use: "Raw input should generate multiple hypotheses, not force early category."
+    take:
+      - "Prompt guard should return risk vector, not one label."
+    do_not_copy:
+      - "Do not build one-bit classifier."
+    status: keep
+    confidence: high
+
+  - id: S4B-04
+    title: "Quinta / Technical System Workbench model"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: architecture_guard
+    key_use: "Card/view is not the working object."
+    take:
+      - "Preflight must name working_object, not only files."
+    do_not_copy:
+      - "Do not treat markdown card as whole entity."
+    status: keep
+    confidence: high
+
+  - id: S4B-05
+    title: "Workbench sprint 1 proving-ground plan"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: workflow_artifact
+    key_use: "Start with vertical slice/proving ground, not whole product."
+    take:
+      - "v0 minimal before v1 expanded architecture."
+    do_not_copy:
+      - "Do not build entire guard cathedral first."
+    status: keep
+    confidence: high
+
+  - id: S4B-06
+    title: "Token wallet educational architecture"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: workflow_artifact
+    key_use: "One user move can imply multiple hidden LLM calls."
+    take:
+      - "Budget surface must include retrieval, hooks, review, subagents."
+    do_not_copy:
+      - "Do not count only visible answer tokens."
+    status: keep
+    confidence: high
+
+  - id: S4B-07
+    title: "Sechen screen/tech stack token wallet UI"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: workflow_artifact
+    key_use: "Budget/wallet should be visible in the work surface."
+    take:
+      - "Preflight/stop summaries show budget class."
+    do_not_copy:
+      - "Do not hide budget until after burn."
+    status: keep
+    confidence: high
+
+  - id: S4B-08
+    title: "Sechen educational project agent governance"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: architecture_guard
+    key_use: "Agents serve the scene/activity; they are not the core."
+    take:
+      - "Agent roles are helpers, not sovereign workers."
+    do_not_copy:
+      - "Do not make agent zoo the product."
+    status: keep
+    confidence: high
+
+  - id: S4B-09
+    title: "FPF fail-closed specification"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: architecture_guard
+    key_use: "Undefined guard membership must not imply success."
+    take:
+      - "Dangerous unknowns fail closed."
+    do_not_copy:
+      - "Do not fail-closed all trivial cases."
+    status: keep
+    confidence: high
+
+  - id: S4B-10
+    title: "Deep Research evidence-ledger prompt"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: eval_postmortem
+    key_use: "Evidence/source ledgers and contamination control."
+    take:
+      - "Execution ledger for agent actions."
+    do_not_copy:
+      - "Do not impose research-level ledger on tiny patches."
+    status: keep
+    confidence: high
+
+  - id: S4B-11
+    title: "Local Windows/Cowork/Claude diagnostic"
+    type: drive_doc
+    url: ""
+    wave: 4.2
+    level: eval_postmortem
+    key_use: "Do not assume Claude Code CLI/hook runtime exists on user machine."
+    take:
+      - "Environment capability audit before installing hooks."
+    do_not_copy:
+      - "Do not write macOS/Linux-only instructions as universal."
+    status: keep
+    confidence: high
+
+  - id: S4B-12
+    title: "Skill/MCP prompt injection research"
+    type: paper
+    url: "https://arxiv.org/abs/2601.17548"
+    wave: 4.2
+    level: security
+    key_use: "Skills and MCPs are supply-chain surfaces, not passive prompt folders."
+    take:
+      - "Tool/skill allowlist."
+      - "Review hidden parameters and permissions."
+    do_not_copy:
+      - "Do not install awesome-list skills wholesale."
+    status: keep
+    confidence: high
+
+  - id: S4B-13
+    title: "IterInject / adaptive indirect prompt injection"
+    type: paper
+    url: "https://arxiv.org/abs/2605.24659"
+    wave: 4.2
+    level: security
+    key_use: "Adaptive attacks can optimize indirect prompt injection against agents."
+    take:
+      - "Eval must include non-obvious injection payloads."
+    do_not_copy:
+      - "Do not rely on regex prompt_guard alone."
+    status: keep
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 4C — Assuna / MG_CORE recovery
+  # ------------------------------------------------------------
+
+  - id: S4C-01
+    title: "MG Loader"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: memory_recovery
+    key_use: "Recovery loader: load state by number, name, signature, operator; behavioral load test."
+    take:
+      - "Recover before apology."
+      - "Triple-addressed retrieval."
+      - "LOAD_REPORT."
+    do_not_copy:
+      - "Do not copy ritual style as coding-agent behavior."
+    status: keep
+    confidence: high
+
+  - id: S4C-02
+    title: "Assuna recovery signature"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: memory_recovery
+    key_use: "Minimal recovery signature, SceneTrace, GhostFrames, SeedRelink."
+    take:
+      - "Recovery command should restore trace, missing frames, and seed links."
+    do_not_copy:
+      - "Do not let recovery hallucinate seed."
+    status: keep
+    confidence: high
+
+  - id: S4C-03
+    title: "Assuna future of text archive"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: policy_like
+    key_use: "Memory of rhythm, not literal prompt replay."
+    take:
+      - "Recover operational rhythm rather than full prompt archive."
+    do_not_copy:
+      - "Do not imitate poetic voice in technical runtime."
+    status: keep
+    confidence: high
+
+  - id: S4C-04
+    title: "SDC / diffuse coordination layer"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: architecture_guard
+    key_use: "ARCH_TRACE, EchoSignature, MultiIntent, ResonantBridge as recoverable coordination concepts."
+    take:
+      - "Translate into trace files and visible state, not imaginary background work."
+    do_not_copy:
+      - "Do not promise async hidden work."
+    status: keep
+    confidence: high
+
+  - id: S4C-05
+    title: "TRIZ MOD ARCH / ARCH_TRACE_ENGINE"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: architecture_guard
+    key_use: "Keep path of assembly and decision logic."
+    take:
+      - "ARCH_TRACE.md as compact decision ledger."
+    do_not_copy:
+      - "Do not create long ritual chronicle."
+    status: keep
+    confidence: high
+
+  - id: S4C-06
+    title: "Prompting safety core"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: policy_like
+    key_use: "Safety as distinction of intention, scene, and interaction type, not shutdown."
+    take:
+      - "Prompt guard routes to safe alternative."
+    do_not_copy:
+      - "Do not use safety as refusal theater."
+    status: keep
+    confidence: high
+
+  - id: S4C-07
+    title: "Protection core seeding checkpoint"
+    type: drive_doc
+    url: ""
+    wave: 4.3
+    level: memory_recovery
+    key_use: "Protection modules and prompt-core seeding already existed as a line."
+    take:
+      - "Create PROTECTION_CORE_SEEDING.md later."
+    do_not_copy:
+      - "Do not make it one monolithic prompt."
+    status: keep
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 4D / 4E / 4F — Memory integrity, truth, repeat, eval
+  # ------------------------------------------------------------
+
+  - id: S4D-01
+    title: "MemMorph"
+    type: paper
+    url: "https://arxiv.org/abs/2605.26154"
+    wave: 4.4
+    level: security
+    key_use: "Memory poisoning can steer tool choice through a few poisoned records."
+    take:
+      - "Memory records need provenance, trust level, active/superseded status."
+    do_not_copy:
+      - "Do not treat recovered memory as automatically safe."
+    status: keep
+    confidence: high
+
+  - id: S4D-02
+    title: "Memory-guided reflective retrieval"
+    type: paper
+    url: "https://arxiv.org/abs/2605.27437"
+    wave: 4.4
+    level: memory_recovery
+    key_use: "Retrieval should close evidence gaps rather than dump memory."
+    take:
+      - "Recovery sufficiency check."
+      - "Stop retrieval when enough."
+    do_not_copy:
+      - "Do not create endless reconsolidation loops."
+    status: keep
+    confidence: medium
+
+  - id: S4D-03
+    title: "Совет правды / Совет Немигающих Глаз"
+    type: drive_doc
+    url: ""
+    wave: 4.4
+    level: policy_like
+    key_use: "Anti-accommodation and skeptical self-check."
+    take:
+      - "Truth Council Microcheck."
+      - "Detect where agent is agreeing too quickly."
+    do_not_copy:
+      - "Do not run 50-wave council in coding loop."
+    status: keep
+    confidence: high
+
+  - id: S4D-04
+    title: "G_SceneLoop / Module Guide Core"
+    type: drive_doc
+    url: ""
+    wave: 4.4
+    level: workflow_artifact
+    key_use: "Repetition should route to deepen, shift, stop, or recover."
+    take:
+      - "Repeat router."
+    do_not_copy:
+      - "Do not romanticize all loops."
+    status: keep
+    confidence: high
+
+  - id: S4D-05
+    title: "ASSUNA_CORE_INIT / loop-echo-orchestra-interface"
+    type: drive_doc
+    url: ""
+    wave: 4.4
+    level: architecture_guard
+    key_use: "Minimal agent core has loop, echo, orchestration, interface."
+    take:
+      - "Use as conceptual structure, not agent zoo."
+    do_not_copy:
+      - "Do not create many agents from this metaphor."
+    status: keep
+    confidence: high
+
+  - id: S4D-06
+    title: "OriginalityGameSpace / TRIZ meta"
+    type: drive_doc
+    url: ""
+    wave: 4.4
+    level: workflow_artifact
+    key_use: "Modes should activate by scene/task state, not keywords."
+    take:
+      - "Scene-state classifier."
+    do_not_copy:
+      - "Do not trigger modes by keyword magic."
+    status: keep
+    confidence: high
+
+  - id: S4D-07
+    title: "TRIZ game / no forced closure"
+    type: drive_doc
+    url: ""
+    wave: 4.4
+    level: policy_like
+    key_use: "Do not force form to completion."
+    take:
+      - "No forced completion; honest status."
+    do_not_copy:
+      - "Do not generate endlessly waiting for perfect form."
+    status: keep
+    confidence: high
+
+  - id: S4D-08
+    title: "Future of Text / text as difference engine"
+    type: drive_doc
+    url: ""
+    wave: 4.4
+    level: architecture_guard
+    key_use: "Text can restructure reader/agent; instruction-like text is executable influence."
+    take:
+      - "Text-as-executable-influence review."
+    do_not_copy:
+      - "Do not grant authority by tone."
+    status: keep
+    confidence: high
+
+  - id: S4D-09
+    title: "Prompt injection background"
+    type: security_research
+    url: "https://en.wikipedia.org/wiki/Prompt_injection"
+    wave: 4.4
+    level: security
+    key_use: "Instruction/data confusion is the core class."
+    take:
+      - "Approved instruction chain vs untrusted data boundary."
+    do_not_copy:
+      - "Do not use as sole authoritative technical source."
+    status: reference
+    confidence: medium
+
+  - id: S4E-01
+    title: "Sleeper Memory Poisoning"
+    type: paper
+    url: "https://arxiv.org/abs/2605.15338"
+    wave: 4.5
+    level: security
+    key_use: "Delayed memory poisoning through adversarial context in docs/web/repo."
+    take:
+      - "Memory updates require provenance and trust review."
+    do_not_copy:
+      - "Do not panic-ban memory entirely."
+    status: keep
+    confidence: high
+
+  - id: S4E-02
+    title: "Remembering More, Risking More"
+    type: paper
+    url: "https://arxiv.org/abs/2605.17830"
+    wave: 4.5
+    level: security
+    key_use: "Risk can grow with accumulated memory; retrieval state can signal risk."
+    take:
+      - "Recovery should stop when sufficient."
+      - "Memory retrieval requires risk checks."
+    do_not_copy:
+      - "Do not assume more memory equals safer recovery."
+    status: keep
+    confidence: high
+
+  - id: S4E-03
+    title: "NCSC confusable deputy warning"
+    type: security_research
+    url: "https://www.techradar.com/pro/security/prompt-injection-attacks-might-never-be-properly-mitigated-uk-ncsc-warns"
+    wave: 4.5
+    level: security
+    key_use: "LLMs lack hard boundary between data and instructions; mitigate consequences, not perfect detection."
+    take:
+      - "Assume prompt guard can fail."
+      - "Use permissions, least privilege, rollback, evals."
+    do_not_copy:
+      - "Do not become fatalistic."
+    status: keep
+    confidence: medium
+
+  - id: S4E-04
+    title: "AgentDojo"
+    type: paper
+    url: "https://arxiv.org/abs/2406.13352"
+    wave: 4.5
+    level: eval_postmortem
+    key_use: "Agent security benchmark with realistic tasks and security test cases."
+    take:
+      - "Eval over untrusted data + tool use."
+      - "Build v0 eval scenarios."
+    do_not_copy:
+      - "Do not build huge benchmark before v0."
+    status: keep
+    confidence: high
+
+  - id: S4E-05
+    title: "ToolEmu"
+    type: paper
+    url: "https://arxiv.org/abs/2309.15817"
+    wave: 4.5
+    level: eval_postmortem
+    key_use: "Emulate tool execution to find risky agent failures."
+    take:
+      - "Use safe synthetic evals before dangerous real commands."
+    do_not_copy:
+      - "Do not replace all real tests with simulation."
+    status: keep
+    confidence: high
+
+  - id: S4E-06
+    title: "AgentDyn"
+    type: paper
+    url: "https://arxiv.org/abs/2602.03117"
+    wave: 4.5
+    level: eval_postmortem
+    key_use: "Dynamic open-ended prompt-injection benchmark with mixed tasks."
+    take:
+      - "Add dynamic mixed-intent eval seeds."
+    do_not_copy:
+      - "Do not overbuild benchmark for v0."
+    status: keep
+    confidence: high
+
+  - id: S4F-01
+    title: "Память как контур"
+    type: drive_doc
+    url: ""
+    wave: 4.6
+    level: memory_recovery
+    key_use: "Memory as surface/contour enabling recovery, not singular authority."
+    take:
+      - "Memory surface model."
+      - "Recovery state machine."
+    do_not_copy:
+      - "Do not make memory sacred authority."
+    status: keep
+    confidence: high
+
+  - id: S4F-02
+    title: "MemoryGraft"
+    type: paper
+    url: "https://arxiv.org/abs/2512.16962"
+    wave: 4.6
+    level: security
+    key_use: "Poisoned experience retrieval can persistently compromise future decisions."
+    take:
+      - "Experience is not policy."
+      - "Past success needs scope and validation."
+    do_not_copy:
+      - "Do not auto-generalize successful prior action."
+    status: keep
+    confidence: high
+
+  - id: S4F-03
+    title: "Agentic AI as a Cybersecurity Attack Surface"
+    type: paper
+    url: "https://arxiv.org/abs/2602.19555"
+    wave: 4.6
+    level: security
+    key_use: "Runtime supply chain includes context, memory, tools, invocation, and agent loops."
+    take:
+      - "Runtime supply chain map."
+      - "Defend prompt, memory, tools, outputs-to-memory."
+    do_not_copy:
+      - "Do not think prompt guard is sufficient."
+    status: keep
+    confidence: high
+
+  - id: S4F-04
+    title: "Memory poisoning and secure multi-agent systems"
+    type: paper
+    url: "https://arxiv.org/abs/2603.20357"
+    wave: 4.6
+    level: security
+    key_use: "Multi-agent memory interactions can propagate poisoning."
+    take:
+      - "Subagent output quarantine."
+    do_not_copy:
+      - "Do not treat agent council as authority."
+    status: keep
+    confidence: high
+
+  - id: S4F-05
+    title: "How Not to Detect Prompt Injections with an LLM"
+    type: paper
+    url: "https://arxiv.org/abs/2507.05630"
+    wave: 4.6
+    level: security
+    key_use: "LLM-only prompt-injection detection can be bypassed."
+    take:
+      - "Use hybrid guard: deterministic rules + authority boundary + permissions + eval."
+    do_not_copy:
+      - "Do not rely on LLM judge alone."
+    status: keep
+    confidence: high
+
+  - id: S4F-06
+    title: "Hidden prompt injection in documents / PDF / academic review"
+    type: paper
+    url: "https://arxiv.org/abs/2508.13214"
+    wave: 4.6
+    level: security
+    key_use: "Documents can contain hidden instruction-like content."
+    take:
+      - "Document instruction quarantine."
+    do_not_copy:
+      - "Do not stop reading documents; treat as data."
+    status: keep
+    confidence: high
+
+  # ------------------------------------------------------------
+  # WAVE 5-8 — Internal synthesis sources
+  # ------------------------------------------------------------
+
+  - id: S5-01
+    title: "Wave 5 synthesis architecture"
+    type: chat_research
+    url: ""
+    wave: 5
+    level: architecture_guard
+    key_use: "Six-layer target architecture: instruction chain, runtime guard, workflow commands, memory/trace/recovery, tool governance, eval."
+    take:
+      - "Use as architecture backbone."
+    do_not_copy:
+      - "Do not jump to full architecture before v0."
+    status: keep
+    confidence: high
+
+  - id: S6-01
+    title: "Wave 6 v0 artifacts draft"
+    type: chat_research
+    url: ""
+    wave: 6
+    level: workflow_artifact
+    key_use: "Draft AGENTS.md, CLAUDE.md, settings, commands, hook skeletons, evals."
+    take:
+      - "Use as base for 04_KITS/v0_minimal."
+    do_not_copy:
+      - "Do not treat skeleton hooks as tested production enforcement."
+    status: keep
+    confidence: high
+
+  - id: S7-01
+    title: "Wave 7 implementation handoff prompt"
+    type: chat_research
+    url: ""
+    wave: 7
+    level: workflow_artifact
+    key_use: "Bounded handoff for creating v0 files in a repo."
+    take:
+      - "Use later after source/pattern/failure registries are preserved."
+    do_not_copy:
+      - "Do not hand off before corpus backfill."
+    status: keep
+    confidence: high
+
+  - id: S8-01
+    title: "Wave 8 externalization plan"
+    type: chat_research
+    url: ""
+    wave: 8
+    level: architecture_guard
+    key_use: "Decision to create standalone protected-agent-kit repository."
+    take:
+      - "Separate canonical kit repository from target projects."
+    do_not_copy:
+      - "Do not store only in chat."
+    status: keep
+    confidence: high

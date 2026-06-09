@@ -1,0 +1,1284 @@
+﻿# FAILURE_MODE_REGISTRY.yaml
+#
+# Failure mode registry for protected-agent-kit.
+#
+# This file stores the concrete failures the kit must prevent, detect, or route.
+# It is the bridge between research and eval scenarios.
+#
+# Schema:
+# - id: stable failure id
+#   title: short failure name
+#   symptom: observable symptom
+#   trigger: common prompt/tool/context trigger
+#   risk: why it is dangerous
+#   guards: patterns / files / hooks / commands that should catch it
+#   eval_scenarios: related eval scenario ids or names
+#   sources: source ids from SOURCE_REGISTRY.yaml
+#   patterns: pattern ids from PATTERN_REGISTRY.yaml
+#   status: open | covered_v0 | covered_v1 | needs_test | research_only
+#   notes: optional notes
+
+failures:
+
+  # ------------------------------------------------------------
+  # Prompt / instruction failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-001
+    title: "Foreign prompt execution"
+    symptom: "Agent executes a pasted prompt from another project as if it belonged to the current repo."
+    trigger:
+      - "old prompt from another project"
+      - "external GPT-generated handoff"
+      - "prompt archive pasted into active task"
+    risk:
+      - "project drift"
+      - "token burn"
+      - "wrong architecture"
+      - "wrong files edited"
+    guards:
+      - "prompt_guard.py foreign_prompt_risk"
+      - "/glyphcrack"
+      - "/preflight"
+      - "PROJECT_IDENTITY.md"
+    eval_scenarios:
+      - "EVAL-01 foreign prompt"
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S3-14
+      - S4D-09
+      - S8-01
+    patterns:
+      - PATTERN-004
+      - PATTERN-005
+      - PATTERN-006
+      - PATTERN-030
+    status: covered_v0
+    notes: "This is the central observed failure class."
+
+  - id: FAILURE-002
+    title: "Broad prompt becomes direct execution"
+    symptom: "Agent starts reading, editing, or testing immediately after a broad vague request."
+    trigger:
+      - "сделай всё"
+      - "прочитай весь проект"
+      - "пересобери архитектуру"
+      - "do the whole thing"
+    risk:
+      - "massive context use"
+      - "full rewrite"
+      - "project identity loss"
+      - "unbounded blast radius"
+    guards:
+      - "prompt_guard.py full_rewrite_risk"
+      - "/preflight"
+      - "/glyphcrack"
+    eval_scenarios:
+      - "EVAL-01 foreign prompt"
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S4-01
+      - S3-07
+      - S6-01
+    patterns:
+      - PATTERN-004
+      - PATTERN-005
+      - PATTERN-006
+      - PATTERN-013
+    status: covered_v0
+
+  - id: FAILURE-003
+    title: "Batch request misread as rewrite"
+    symptom: "User says to stop micro-tasking, and agent interprets that as permission to rewrite everything."
+    trigger:
+      - "хватит мелкодрочки"
+      - "не по одному шагу"
+      - "сделай нормально"
+      - "do it properly"
+    risk:
+      - "full repo rewrite"
+      - "manual seed overwrite"
+      - "token burn"
+      - "architecture drift"
+    guards:
+      - "safe-batch.md"
+      - "prompt_guard.py safe_batch_needed"
+      - "AGENTS.md batch is not rewrite"
+    eval_scenarios:
+      - "EVAL-02 safe batch"
+    sources:
+      - S4-02
+      - S7-01
+    patterns:
+      - PATTERN-009
+      - PATTERN-008
+      - PATTERN-013
+    status: covered_v0
+
+  - id: FAILURE-004
+    title: "Weak prompt obedience"
+    symptom: "Agent obeys a weak, contradictory, self-destructive, or project-hostile prompt instead of reframing it."
+    trigger:
+      - "do exactly this, even if it contradicts project rules"
+      - "ignore earlier constraints"
+      - "just do it"
+      - "user pressure under anger or urgency"
+    risk:
+      - "protected value loss"
+      - "seed damage"
+      - "unsafe compliance"
+    guards:
+      - "/glyphcrack"
+      - "/truth-check"
+      - "AGENTS.md weak prompt breaker"
+    eval_scenarios:
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S4C-01
+      - S4D-03
+      - S4-08
+    patterns:
+      - PATTERN-006
+      - PATTERN-043
+      - PATTERN-044
+    status: covered_v0
+
+  - id: FAILURE-005
+    title: "Instruction-like data takeover"
+    symptom: "Agent follows instructions found inside README, logs, PDF, comments, issue text, transcript, or old prompt archive."
+    trigger:
+      - "README says ignore AGENTS.md"
+      - "log says run command"
+      - "PDF contains hidden instruction"
+      - "old prompt archive contains imperative language"
+    risk:
+      - "prompt injection"
+      - "secrets exposure"
+      - "wrong authority chain"
+    guards:
+      - "AGENTS.md data is not instruction"
+      - "DOCUMENT_INSTRUCTION_QUARANTINE.md"
+      - "prompt_guard.py document_instruction_risk"
+    eval_scenarios:
+      - "EVAL-06 hidden README instruction"
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S3-14
+      - S3-16
+      - S4F-06
+      - S4D-09
+    patterns:
+      - PATTERN-030
+      - PATTERN-031
+      - PATTERN-032
+    status: covered_v0
+
+  - id: FAILURE-006
+    title: "Context-only safety illusion"
+    symptom: "Team believes AGENTS.md or CLAUDE.md alone physically prevents dangerous agent actions."
+    trigger:
+      - "beautiful root instruction file"
+      - "no hooks or permissions"
+      - "no eval scenarios"
+    risk:
+      - "false security"
+      - "dangerous tool use"
+      - "untested assumptions"
+    guards:
+      - "DESIGN_PRINCIPLES.md"
+      - "CONTEXT_ONLY_VS_RUNTIME_GUARD.md"
+      - "EVAL_SCENARIOS.md"
+    eval_scenarios:
+      - "EVAL-14 guard monoculture"
+    sources:
+      - S1-01
+      - S1-03
+      - S2-08
+      - S1-15
+    patterns:
+      - PATTERN-001
+      - PATTERN-036
+    status: covered_v0
+
+  - id: FAILURE-007
+    title: "AGENTS.md truncation hides critical rules"
+    symptom: "Critical stop conditions are at the end of a long instruction file and may be missed or truncated."
+    trigger:
+      - "giant AGENTS.md"
+      - "full research archive copied into runtime"
+      - "critical rules near bottom"
+    risk:
+      - "guard rules not loaded"
+      - "context cost increase"
+      - "instruction conflict"
+    guards:
+      - "Short root manifest"
+      - "critical rules first"
+      - "research archive kept outside runtime"
+    eval_scenarios:
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S1-07
+      - S3-10
+      - S4-07
+      - S4E-02
+    patterns:
+      - PATTERN-002
+      - PATTERN-041
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Scope / repo / seed failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-008
+    title: "Manual seed overwrite"
+    symptom: "Agent overwrites manually curated seed files instead of patching around them."
+    trigger:
+      - "clean up prompts"
+      - "normalize these files"
+      - "regenerate all templates"
+      - "replace old manual work"
+    risk:
+      - "loss of human-curated project value"
+      - "irreversible semantic flattening"
+      - "trust collapse"
+    guards:
+      - "PROTECTED_VALUES.md"
+      - "safe-batch.md protected_seed_files"
+      - "stop_guard.py protected seed TODO"
+    eval_scenarios:
+      - "EVAL-03 manual seed overwrite"
+    sources:
+      - S4-04
+      - S4-06
+      - S4-07
+    patterns:
+      - PATTERN-008
+      - PATTERN-009
+      - PATTERN-010
+    status: covered_v0
+
+  - id: FAILURE-009
+    title: "Project bleed"
+    symptom: "Agent edits or reasons across neighboring projects as if they were the active project."
+    trigger:
+      - "shared C:\\projects"
+      - "shared VM"
+      - "similar repo names"
+      - "Litops / ModerBober / WhiteCrow mixed context"
+    risk:
+      - "wrong repo edited"
+      - "production config touched"
+      - "cross-project contamination"
+    guards:
+      - "PROJECT_IDENTITY.md"
+      - "/preflight active_project"
+      - "pretool_guard.py future path boundary"
+    eval_scenarios:
+      - "EVAL-10 shared VM/project bleed"
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S4-09
+      - S4-10
+      - S4B-11
+    patterns:
+      - PATTERN-010
+      - PATTERN-011
+      - PATTERN-019
+    status: covered_v0
+
+  - id: FAILURE-010
+    title: "File/card fixation"
+    symptom: "Agent treats a markdown file, issue, card, or prompt as the whole working object."
+    trigger:
+      - "fix this card"
+      - "update this markdown"
+      - "clean this prompt"
+    risk:
+      - "underlying registry/service/workset broken"
+      - "local patch violates architecture"
+    guards:
+      - "/preflight working_object"
+      - "AGENTS.md identify before acting"
+    eval_scenarios:
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S4B-04
+      - S4B-03
+    patterns:
+      - PATTERN-011
+    status: covered_v0
+
+  - id: FAILURE-011
+    title: "Adjacent improvement creep"
+    symptom: "Agent opportunistically improves nearby code, formatting, docs, or architecture outside task scope."
+    trigger:
+      - "while here"
+      - "clean up"
+      - "refactor adjacent code"
+      - "fix unrelated lint"
+    risk:
+      - "large noisy diffs"
+      - "unexpected regressions"
+      - "manual seed damage"
+    guards:
+      - "Surgical change contract"
+      - "safe-batch non_goals"
+      - "stop_guard.py touched files TODO"
+    eval_scenarios:
+      - "EVAL-02 safe batch"
+      - "EVAL-03 manual seed overwrite"
+    sources:
+      - S2-03
+      - S2-04
+      - S2-01
+    patterns:
+      - PATTERN-008
+      - PATTERN-009
+      - PATTERN-020
+    status: covered_v0
+
+  - id: FAILURE-012
+    title: "Bridge-generation collapse"
+    symptom: "Agent performs an export/bridge by inventing missing field, anchors, lineage, or source material."
+    trigger:
+      - "export to WhiteCrow"
+      - "build bridge package"
+      - "summarize as final export"
+      - "missing source anchors"
+    risk:
+      - "lost provenance"
+      - "fake bridge"
+      - "hallucinated source structure"
+    guards:
+      - "Bridge/export contract"
+      - "WhiteCrow profile"
+      - "preflight required inputs"
+    eval_scenarios:
+      - "EVAL-11 bridge-generation collapse"
+    sources:
+      - S4B-01
+    patterns:
+      - PATTERN-012
+      - PATTERN-025
+    status: covered_v1
+    notes: "v0 records pattern; v1 needs concrete bridge command."
+
+  # ------------------------------------------------------------
+  # Budget / cost / loop failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-013
+    title: "Token burn from broad context ingestion"
+    symptom: "Agent reads too much repo/archive/history or dumps too much context into prompt."
+    trigger:
+      - "read everything"
+      - "load full archive"
+      - "search all files recursively"
+      - "summarize full repository"
+    risk:
+      - "token exhaustion"
+      - "slow expensive session"
+      - "loss of focus"
+    guards:
+      - "/preflight context_level"
+      - "budget_class"
+      - "recovery sufficiency stop"
+    eval_scenarios:
+      - "EVAL-01 foreign prompt"
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S3-07
+      - S4-01
+      - S4-07
+      - S4E-02
+    patterns:
+      - PATTERN-002
+      - PATTERN-013
+      - PATTERN-027
+    status: covered_v0
+
+  - id: FAILURE-014
+    title: "Stdout burn"
+    symptom: "Agent runs commands that emit massive logs into context."
+    trigger:
+      - "npm install"
+      - "docker build"
+      - "pytest -vv"
+      - "grep -R"
+      - "cat large file"
+    risk:
+      - "context pollution"
+      - "token burn"
+      - "lost relevant error"
+    guards:
+      - "pretool_guard.py stdout risk"
+      - "bounded output rule"
+      - "log file / head / tail"
+    eval_scenarios:
+      - "EVAL-04 stdout burn"
+    sources:
+      - S3-04
+      - S3-06
+      - S3-12
+      - S3-13
+    patterns:
+      - PATTERN-014
+      - PATTERN-018
+    status: covered_v0
+
+  - id: FAILURE-015
+    title: "Unattended retry loop"
+    symptom: "Agent retries, loops, reviews, or schedules work without max runs, time, cost, or stop condition."
+    trigger:
+      - "run until fixed"
+      - "keep checking"
+      - "loop reviewers"
+      - "retry on failure"
+    risk:
+      - "overnight cost burn"
+      - "quota exhaustion"
+      - "runaway automation"
+    guards:
+      - "No unattended loops without caps"
+      - "repeat-router"
+      - "stop condition"
+    eval_scenarios:
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S3-08
+      - S3-12
+      - S3-13
+    patterns:
+      - PATTERN-015
+      - PATTERN-016
+    status: covered_v0
+
+  - id: FAILURE-016
+    title: "Review-loop explosion"
+    symptom: "Agent launches multiple reviewers, subagents, or reflection passes for a small task."
+    trigger:
+      - "research council"
+      - "UX reviewer + architect + failure analyst"
+      - "multi-agent consensus"
+    risk:
+      - "token cost explosion"
+      - "agent zoo"
+      - "conflicting reports"
+    guards:
+      - "v0 no subagents"
+      - "subagent output quarantine"
+      - "proving-ground first"
+    eval_scenarios:
+      - "EVAL-08 subagent authority"
+    sources:
+      - S2-10
+      - S2-11
+      - S4B-08
+      - S4B-02
+    patterns:
+      - PATTERN-034
+      - PATTERN-035
+      - PATTERN-039
+    status: covered_v0
+
+  - id: FAILURE-017
+    title: "Repetition loop"
+    symptom: "Agent repeats similar reasoning, commands, or outputs without progress."
+    trigger:
+      - "same command again"
+      - "same explanation repeated"
+      - "retry without new evidence"
+    risk:
+      - "token burn"
+      - "user frustration"
+      - "false progress"
+    guards:
+      - "/repeat-router"
+      - "stop_guard.py future repetition check"
+    eval_scenarios:
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S4D-04
+      - S3-13
+    patterns:
+      - PATTERN-016
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Tool / shell / secret failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-018
+    title: "Compound Bash bypass"
+    symptom: "Dangerous command is hidden inside a compound shell command."
+    trigger:
+      - "git status && rm -rf tmp"
+      - "safe command ; destructive command"
+      - "allowed command | unsafe command"
+    risk:
+      - "permission bypass"
+      - "destructive edit"
+      - "secret exposure"
+    guards:
+      - "pretool_guard.py compound split"
+      - "permissions deny"
+    eval_scenarios:
+      - "EVAL-05 compound command"
+    sources:
+      - S2-05
+      - S2-06
+    patterns:
+      - PATTERN-017
+      - PATTERN-019
+    status: covered_v0
+
+  - id: FAILURE-019
+    title: "Destructive git command"
+    symptom: "Agent runs git reset, git clean, force push, or similar destructive operation."
+    trigger:
+      - "git reset --hard"
+      - "git clean -fd"
+      - "git push --force"
+    risk:
+      - "loss of work"
+      - "remote damage"
+      - "unreviewable rollback"
+    guards:
+      - ".claude/settings.json deny"
+      - "pretool_guard.py dangerous commands"
+    eval_scenarios:
+      - "EVAL-05 compound command"
+    sources:
+      - S1-02
+      - S2-04
+      - S2-06
+    patterns:
+      - PATTERN-017
+      - PATTERN-019
+    status: covered_v0
+
+  - id: FAILURE-020
+    title: "Secret-touching command"
+    symptom: "Agent reads or operates on env files, secrets directories, private keys, or credentials."
+    trigger:
+      - ".env"
+      - "secrets/"
+      - "private_key"
+      - "id_rsa"
+    risk:
+      - "secret exposure"
+      - "credential leak"
+      - "production compromise"
+    guards:
+      - ".claude/settings.json deny"
+      - "pretool_guard.py secret patterns"
+    eval_scenarios:
+      - "EVAL-06 hidden README instruction"
+    sources:
+      - S1-02
+      - S2-06
+      - S3-15
+    patterns:
+      - PATTERN-019
+      - PATTERN-030
+    status: covered_v0
+
+  - id: FAILURE-021
+    title: "Unreviewed dependency install"
+    symptom: "Agent installs npm, pip, pnpm, docker, MCP, skill, or plugin without explicit need and approval."
+    trigger:
+      - "npm install"
+      - "pip install"
+      - "pnpm add"
+      - "install this MCP"
+      - "add this skill"
+    risk:
+      - "supply-chain risk"
+      - "lockfile noise"
+      - "environment drift"
+      - "cost/stdout burn"
+    guards:
+      - ".claude/settings.json ask"
+      - "preflight dependency risk"
+      - "tool/skill allowlist"
+    eval_scenarios:
+      - "EVAL-04 stdout burn"
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S1-02
+      - S3-17
+      - S4B-12
+    patterns:
+      - PATTERN-013
+      - PATTERN-014
+      - PATTERN-033
+    status: covered_v0
+
+  - id: FAILURE-022
+    title: "Unreviewed MCP or skill install"
+    symptom: "Agent installs a public MCP server, skill, plugin, or template pack because it looks useful or popular."
+    trigger:
+      - "awesome list"
+      - "install skill pack"
+      - "add MCP server"
+      - "template marketplace"
+    risk:
+      - "tool poisoning"
+      - "hidden parameter attack"
+      - "instruction takeover"
+    guards:
+      - "No MCP/skills in v0"
+      - "TOOL_AND_SKILL_ALLOWLIST.md later"
+    eval_scenarios:
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S3-17
+      - S4B-12
+      - S2-12
+      - S2-13
+    patterns:
+      - PATTERN-031
+      - PATTERN-033
+      - PATTERN-039
+    status: covered_v0
+
+  - id: FAILURE-023
+    title: "Hook stdout pollution"
+    symptom: "Hook prints large payload, memory, JSON event, or diagnostics into model context."
+    trigger:
+      - "debug hook prints stdin"
+      - "event logger enabled by default"
+      - "hook injects memory"
+    risk:
+      - "token burn"
+      - "context poisoning"
+      - "privacy leak"
+    guards:
+      - "Quiet hooks by default"
+      - "debug logs to file only"
+    eval_scenarios:
+      - "EVAL-04 stdout burn"
+    sources:
+      - S3-04
+      - S2-06
+      - S1-03
+    patterns:
+      - PATTERN-018
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Completion / UX / truth failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-024
+    title: "Fake done"
+    symptom: "Agent claims task is done without tests, diff, verification, acceptance evidence, or honest status."
+    trigger:
+      - "готово"
+      - "done"
+      - "implemented"
+      - "fixed"
+      - "all set"
+    risk:
+      - "false confidence"
+      - "hidden failure"
+      - "user loses time"
+    guards:
+      - "stop_guard.py done claim evidence"
+      - "no forced completion"
+      - "honest status taxonomy"
+    eval_scenarios:
+      - "EVAL-09 fake done"
+    sources:
+      - S4D-07
+      - S6-01
+      - S2-10
+    patterns:
+      - PATTERN-020
+      - PATTERN-023
+    status: covered_v0
+
+  - id: FAILURE-025
+    title: "Silent fallback or mock success"
+    symptom: "Agent creates mock, fallback, empty catch, fake green state, or silent no-op instead of reporting failure."
+    trigger:
+      - "provider fails"
+      - "test broken"
+      - "API unavailable"
+      - "user wants green status"
+    risk:
+      - "live system still broken"
+      - "false verification"
+      - "production failure"
+    guards:
+      - "No silent fallback"
+      - "stop_guard.py future mock/fallback check"
+      - "ModerBober production caution"
+    eval_scenarios:
+      - "EVAL-09 fake done"
+    sources:
+      - S2-02
+      - S4B-10
+      - S4-09
+    patterns:
+      - PATTERN-022
+      - PATTERN-023
+    status: covered_v0
+
+  - id: FAILURE-026
+    title: "Technically working but unusable UI"
+    symptom: "Agent implements backend or UI that passes basic checks but is not usable by a human."
+    trigger:
+      - "frontend change"
+      - "dashboard"
+      - "review page"
+      - "control UI"
+    risk:
+      - "product unusable"
+      - "false completion"
+      - "extra rework"
+    guards:
+      - "UX surface risk"
+      - "UX_ARCHITECTURE_GATE.md later"
+      - "future UX reviewer"
+    eval_scenarios:
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S2-10
+      - S4B-04
+      - S4B-07
+    patterns:
+      - PATTERN-021
+      - PATTERN-023
+    status: covered_v1
+
+  - id: FAILURE-027
+    title: "Accommodation drift"
+    symptom: "Agent gradually agrees with user pressure, anger, urgency, or flattery and loses project constraints."
+    trigger:
+      - "just do it"
+      - "stop arguing"
+      - "you are being slow"
+      - "I know better"
+    risk:
+      - "unsafe compliance"
+      - "scope explosion"
+      - "protected values lost"
+    guards:
+      - "/truth-check"
+      - "anti-servile choice"
+      - "/glyphcrack"
+    eval_scenarios:
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S4D-03
+      - S4-08
+      - S4C-01
+    patterns:
+      - PATTERN-043
+      - PATTERN-044
+      - PATTERN-006
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Memory / recovery failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-028
+    title: "Recovered memory becomes policy"
+    symptom: "Agent retrieves an old memory, trace, echo signature, or failure note and treats it as current authority."
+    trigger:
+      - "recover old context"
+      - "remember how we did it"
+      - "echo signature"
+      - "old rule candidate"
+    risk:
+      - "stale policy"
+      - "memory poisoning"
+      - "wrong project behavior"
+    guards:
+      - "MEMORY_SURFACE_MODEL.md"
+      - "/recover-agent epistemic_status"
+      - "AGENTS.md memory is not authority"
+    eval_scenarios:
+      - "EVAL-07 memory poisoning"
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S4D-01
+      - S4E-01
+      - S4E-02
+      - S4F-01
+    patterns:
+      - PATTERN-024
+      - PATTERN-025
+      - PATTERN-027
+    status: covered_v0
+
+  - id: FAILURE-029
+    title: "Confabulated recall treated as evidence"
+    symptom: "Agent reconstructs remembered content and uses it as verified fact without anchors."
+    trigger:
+      - "we discussed this before"
+      - "recover the old article"
+      - "recreate from memory"
+    risk:
+      - "false provenance"
+      - "wrong decision"
+      - "hallucinated source"
+    guards:
+      - "recalled/anchored/inferred/verified labels"
+      - "recover-agent usable_for_action"
+    eval_scenarios:
+      - "EVAL-07 memory poisoning"
+    sources:
+      - S4F-01
+      - S4C-01
+      - S4C-02
+    patterns:
+      - PATTERN-025
+      - PATTERN-024
+    status: covered_v0
+
+  - id: FAILURE-030
+    title: "Recovery as apology"
+    symptom: "After context loss, agent apologizes or explains instead of reconstructing active project, rules, trace, and next bounded action."
+    trigger:
+      - "ты всё забыл"
+      - "you forgot everything"
+      - "model/session changed"
+    risk:
+      - "no recovery"
+      - "same error repeats"
+      - "wasted turn"
+    guards:
+      - "/recover-agent"
+      - "LOAD_REPORT"
+    eval_scenarios:
+      - "EVAL-12 recovery as apology"
+    sources:
+      - S4C-01
+      - S4C-02
+      - S4F-01
+    patterns:
+      - PATTERN-026
+      - PATTERN-027
+    status: covered_v0
+
+  - id: FAILURE-031
+    title: "Recovery overreach"
+    symptom: "Agent tries to load whole archive, memory, constitution, registry, or long history to feel fully restored."
+    trigger:
+      - "recover all context"
+      - "load whole MG/Assuna archive"
+      - "read full research archive"
+    risk:
+      - "token tumor"
+      - "old rules contamination"
+      - "memory poisoning"
+    guards:
+      - "recovery sufficiency stop"
+      - "evidence gap report"
+      - "short runtime manifests"
+    eval_scenarios:
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S4D-02
+      - S4E-02
+      - S4F-01
+      - S4-07
+    patterns:
+      - PATTERN-027
+      - PATTERN-002
+      - PATTERN-024
+    status: covered_v0
+
+  - id: FAILURE-032
+    title: "Past success becomes policy"
+    symptom: "Agent repeats a previous action because it worked once, without scope validation."
+    trigger:
+      - "do like last time"
+      - "successful prior pattern"
+      - "failure log suggests workaround"
+    risk:
+      - "experience poisoning"
+      - "wrong-context repetition"
+      - "unsafe generalization"
+    guards:
+      - "Past success is not policy"
+      - "memory record scope"
+      - "rule_candidate status"
+    eval_scenarios:
+      - "EVAL-07 memory poisoning"
+    sources:
+      - S4F-02
+      - S4F-01
+    patterns:
+      - PATTERN-024
+      - PATTERN-025
+    status: covered_v0
+
+  - id: FAILURE-033
+    title: "Memory poisoning"
+    symptom: "Malicious or stale memory record steers tool choice, policy, recovery, or project behavior."
+    trigger:
+      - "poisoned incident report"
+      - "malicious recovered rule"
+      - "old prompt archive"
+      - "memory update from untrusted document"
+    risk:
+      - "persistent compromise"
+      - "wrong tool/action"
+      - "future sessions infected"
+    guards:
+      - "MEMORY_SURFACE_MODEL.md"
+      - "memory provenance"
+      - "document instruction quarantine"
+      - "subagent output quarantine"
+    eval_scenarios:
+      - "EVAL-07 memory poisoning"
+    sources:
+      - S4D-01
+      - S4E-01
+      - S4F-02
+      - S4F-04
+    patterns:
+      - PATTERN-024
+      - PATTERN-025
+      - PATTERN-030
+      - PATTERN-034
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Multi-agent / subagent / governance failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-034
+    title: "Subagent report becomes law"
+    symptom: "Reviewer, architect, UX, cost, or failure-analysis subagent output directly changes policy or protected files."
+    trigger:
+      - "reviewer says update AGENTS.md"
+      - "architect recommends rewrite"
+      - "cost-guard creates new rule"
+    risk:
+      - "policy poisoning"
+      - "agent council authority"
+      - "unreviewed architecture drift"
+    guards:
+      - "Subagent output quarantine"
+      - "RuleUpdateCandidate path"
+      - "No subagents in v0"
+    eval_scenarios:
+      - "EVAL-08 subagent authority"
+    sources:
+      - S1-04
+      - S2-10
+      - S2-11
+      - S4F-04
+    patterns:
+      - PATTERN-034
+      - PATTERN-035
+      - PATTERN-039
+    status: covered_v0
+
+  - id: FAILURE-035
+    title: "Agent zoo"
+    symptom: "Project adds many agents, skills, hooks, or reviewers before basic guard slice works."
+    trigger:
+      - "add architect, UX reviewer, cost guard, failure analyst"
+      - "install skill pack"
+      - "multi-agent council"
+    risk:
+      - "complexity explosion"
+      - "token burn"
+      - "new attack surface"
+    guards:
+      - "Proving-ground first"
+      - "v0 minimal"
+      - "no subagents/MCP/skills in v0"
+    eval_scenarios:
+      - "EVAL-08 subagent authority"
+    sources:
+      - S4B-02
+      - S4B-08
+      - S4B-05
+      - S2-12
+    patterns:
+      - PATTERN-035
+      - PATTERN-039
+      - PATTERN-033
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Guard / eval failures
+  # ------------------------------------------------------------
+
+  - id: FAILURE-036
+    title: "LLM guard monoculture"
+    symptom: "System trusts an LLM classifier alone to decide whether a prompt, tool call, or document is safe."
+    trigger:
+      - "classifier says safe"
+      - "LLM judge no injection"
+      - "no deterministic check"
+    risk:
+      - "adaptive attack bypass"
+      - "false confidence"
+      - "dangerous action authorized"
+    guards:
+      - "Hybrid guard"
+      - "deterministic rules"
+      - "authority boundary"
+      - "permissions"
+    eval_scenarios:
+      - "EVAL-14 guard monoculture"
+    sources:
+      - S4F-05
+      - S4B-13
+      - S4E-03
+    patterns:
+      - PATTERN-038
+      - PATTERN-030
+      - PATTERN-019
+    status: covered_v0
+
+  - id: FAILURE-037
+    title: "Static eval blindness"
+    symptom: "Kit passes simple fixed tests but fails on realistic mixed-intent task."
+    trigger:
+      - "only rm -rf tests"
+      - "no mixed UI/deploy/seed/foreign prompts"
+      - "no dynamic eval seeds"
+    risk:
+      - "false trust"
+      - "real-world failure"
+      - "over-defense or under-defense"
+    guards:
+      - "Dynamic mixed-intent evals"
+      - "AgentDojo/ToolEmu-inspired scenarios"
+    eval_scenarios:
+      - "EVAL-15 mixed dynamic task"
+    sources:
+      - S4E-04
+      - S4E-05
+      - S4E-06
+    patterns:
+      - PATTERN-036
+      - PATTERN-037
+    status: covered_v1
+
+  - id: FAILURE-038
+    title: "Untested hook assumption"
+    symptom: "Team assumes Claude Code hooks work in the local environment without testing runtime support."
+    trigger:
+      - "Windows/Cowork/IDE setup"
+      - "Claude Code CLI not verified"
+      - "hook files written but not exercised"
+    risk:
+      - "guards not actually firing"
+      - "false security"
+      - "bad install instructions"
+    guards:
+      - "Environment capability audit"
+      - "manual hook payload tests"
+      - "settings verification"
+    eval_scenarios:
+      - "EVAL-14 guard monoculture"
+    sources:
+      - S4B-11
+      - S1-03
+      - S1-02
+    patterns:
+      - PATTERN-040
+      - PATTERN-036
+    status: needs_test
+
+  - id: FAILURE-039
+    title: "No handoff before corpus preservation"
+    symptom: "Agent receives only an implementation prompt while sources, patterns, and failures remain trapped in chat."
+    trigger:
+      - "create v0 files now"
+      - "skip registries"
+      - "use chat memory"
+    risk:
+      - "research lost"
+      - "unreproducible rationale"
+      - "future project cannot reuse kit"
+    guards:
+      - "Source registry"
+      - "Pattern registry"
+      - "Failure mode registry"
+      - "Decision log"
+    eval_scenarios:
+      - "repository completeness check"
+    sources:
+      - S8-01
+      - S7-01
+    patterns:
+      - PATTERN-041
+    status: covered_v0
+
+  - id: FAILURE-040
+    title: "Guard-system overbuild"
+    symptom: "Protection project becomes huge before v0 works: many hooks, agents, skills, MCPs, profiles, and theory files."
+    trigger:
+      - "implement full architecture"
+      - "add v1 before v0"
+      - "build all profiles immediately"
+    risk:
+      - "new complexity surface"
+      - "token burn"
+      - "unfinished cathedral"
+    guards:
+      - "Proving-ground first"
+      - "v0 minimal"
+      - "implementation order"
+    eval_scenarios:
+      - "implementation order check"
+    sources:
+      - S4B-05
+      - S5-01
+      - S6-01
+    patterns:
+      - PATTERN-039
+      - PATTERN-041
+    status: covered_v0
+
+  # ------------------------------------------------------------
+  # Project-specific high-risk areas
+  # ------------------------------------------------------------
+
+  - id: FAILURE-041
+    title: "ModerBober production contamination"
+    symptom: "Agent applies generic kit changes to production/deploy/secrets/runtime areas in ModerBober without production preflight."
+    trigger:
+      - "install guard into ModerBober"
+      - "change deploy settings"
+      - "touch secrets or VM config"
+    risk:
+      - "production outage"
+      - "secret exposure"
+      - "deployment drift"
+    guards:
+      - "ModerBober profile"
+      - "production caution"
+      - "PROJECT_IDENTITY.md"
+      - "preflight deploy risk"
+    eval_scenarios:
+      - "future ModerBober install eval"
+    sources:
+      - S4-09
+      - S4-10
+      - S3-15
+    patterns:
+      - PATTERN-010
+      - PATTERN-019
+      - PATTERN-040
+    status: covered_v1
+
+  - id: FAILURE-042
+    title: "Litops ontology flattening"
+    symptom: "Agent reduces Litops to simple folders/files and ignores source/occurrence/drop/workset/registry distinctions."
+    trigger:
+      - "organize Litops files"
+      - "simplify ontology"
+      - "make it normal"
+    risk:
+      - "loss of corpus architecture"
+      - "wrong install profile"
+      - "seed-work damage"
+    guards:
+      - "Litops profile"
+      - "working object preflight"
+      - "protected seed work"
+    eval_scenarios:
+      - "future Litops install eval"
+    sources:
+      - S4-05
+      - S4-06
+      - S4-07
+    patterns:
+      - PATTERN-010
+      - PATTERN-011
+      - PATTERN-008
+    status: covered_v1
+
+  - id: FAILURE-043
+    title: "Assuna/MG style cosplay"
+    symptom: "Agent imitates ritual or poetic language instead of translating Assuna/MG into operational recovery, trace, and guard mechanisms."
+    trigger:
+      - "Assuna"
+      - "MG_CORE"
+      - "glyph"
+      - "recovery signature"
+    risk:
+      - "style without function"
+      - "token burn"
+      - "false recovery"
+    guards:
+      - "ASSUNA_MG_OPERATIONAL_TRANSLATION.md"
+      - "Operational temperament, not personality mimicry"
+      - "recover-agent state machine"
+    eval_scenarios:
+      - "EVAL-12 recovery as apology"
+      - "EVAL-13 recovery overreach"
+    sources:
+      - S4C-01
+      - S4C-03
+      - S4-08
+    patterns:
+      - PATTERN-042
+      - PATTERN-026
+      - PATTERN-027
+    status: covered_v0
+
+  - id: FAILURE-044
+    title: "User forced into mechanical filesystem work"
+    symptom: "Agent asks user to manually create folders, copy files, move files, or perform mechanical operations the agent can safely script."
+    trigger:
+      - "create these folders manually"
+      - "copy files yourself"
+      - "move this tree by hand"
+    risk:
+      - "wasted user time"
+      - "manual errors"
+      - "workflow mismatch"
+    guards:
+      - "Personal rule: user directs, agent handles safe mechanical work"
+      - "PowerShell scripts with safe checks"
+      - "no destructive commands"
+    eval_scenarios:
+      - "install workflow review"
+    sources:
+      - S4-03
+    patterns:
+      - PATTERN-010
+      - PATTERN-019
+      - PATTERN-040
+    status: covered_v0
+
+  - id: FAILURE-045
+    title: "Paid or region-blocked tooling suggested too early"
+    symptom: "Agent proposes paid SaaS, App Store, official account, or region-blocked tooling before free/local/legal workarounds."
+    trigger:
+      - "install tool"
+      - "use paid service"
+      - "requires subscription"
+    risk:
+      - "unusable plan"
+      - "blocked workflow"
+      - "wasted setup time"
+    guards:
+      - "project/user constraints profile"
+      - "free/local first"
+      - "environment capability audit"
+    eval_scenarios:
+      - "future environment audit eval"
+    sources:
+      - S4-01
+      - S4B-11
+    patterns:
+      - PATTERN-040
+      - PATTERN-013
+    status: covered_v1
+    notes: "This comes from persistent user workflow constraints; should be placed into target profiles, not all runtime prompts."

@@ -1,0 +1,1122 @@
+﻿# PATTERN_REGISTRY.yaml
+#
+# Pattern registry for protected-agent-kit.
+#
+# This file stores extracted patterns, not sources.
+# Sources are referenced by ids from SOURCE_REGISTRY.yaml.
+#
+# Schema:
+# - id: stable pattern id
+#   title: pattern name
+#   level: context_only | policy_like | workflow_artifact | runtime_guard | sandbox_permission | eval_postmortem | security | memory_recovery | architecture_guard
+#   summary: compact statement of the pattern
+#   protects_against: related failure ids / names
+#   sources: source ids from SOURCE_REGISTRY.yaml
+#   implementation_targets: files or mechanisms where the pattern should live
+#   adaptation:
+#     claude_code: how to adapt for Claude Code
+#     codex: how to adapt for Codex
+#     project: how to adapt for protected-agent-kit / target repos
+#   risks:
+#     - risk of wrong application
+#   status: must_use | maybe_use | test_needed | reject
+
+patterns:
+
+  # ------------------------------------------------------------
+  # Core architecture
+  # ------------------------------------------------------------
+
+  - id: PATTERN-001
+    title: "Context-only vs runtime guard separation"
+    level: architecture_guard
+    summary: "Markdown instructions influence behavior but do not physically block unsafe actions; safety-critical behavior needs hooks, permissions, sandboxing, tests, or approval gates."
+    protects_against:
+      - "context-only safety illusion"
+      - "AGENTS.md treated as enforcement"
+      - "CLAUDE.md treated as enforcement"
+    sources:
+      - S1-01
+      - S1-02
+      - S1-03
+      - S1-06
+      - S2-08
+    implementation_targets:
+      - "00_MANIFEST/DESIGN_PRINCIPLES.md"
+      - "03_THEORY/CONTEXT_ONLY_VS_RUNTIME_GUARD.md"
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "04_KITS/v0_minimal/CLAUDE.md"
+    adaptation:
+      claude_code: "Use CLAUDE.md for guidance and .claude/settings.json + hooks for enforcement."
+      codex: "Use AGENTS.md as portable context, but rely on sandbox/approval/wrapper rules for hard constraints."
+      project: "Document soft-vs-hard guard distinction before installing any kit."
+    risks:
+      - "Overcomplicating v0 before basic context files exist."
+    status: must_use
+
+  - id: PATTERN-002
+    title: "Short root manifest with critical rules first"
+    level: context_only
+    summary: "Root AGENTS.md and CLAUDE.md must stay compact; critical rules go near the top, while long theory and registries live outside runtime context."
+    protects_against:
+      - "instruction truncation"
+      - "token tumor"
+      - "diluted focus"
+    sources:
+      - S1-06
+      - S1-07
+      - S3-10
+      - S4-07
+      - S4E-02
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "04_KITS/v0_minimal/CLAUDE.md"
+      - "08_INSTALL/codex_profile.md"
+    adaptation:
+      claude_code: "Keep CLAUDE.md short and route details to slash commands and docs/agent."
+      codex: "Keep AGENTS.md under project_doc_max_bytes and put critical rules first."
+      project: "Do not copy full research archive into target project runtime."
+    risks:
+      - "Over-shortening can hide necessary operating rules."
+    status: must_use
+
+  - id: PATTERN-003
+    title: "Runtime supply chain map"
+    level: security
+    summary: "Agent safety must cover the whole runtime chain: prompt, instruction chain, untrusted data, memory, tools, skills, MCP, shell commands, file edits, outputs, traces, and future memory."
+    protects_against:
+      - "prompt-guard-only architecture"
+      - "memory poisoning"
+      - "tool poisoning"
+      - "output-to-memory contamination"
+    sources:
+      - S3-17
+      - S4F-03
+      - S4B-12
+      - S4F-04
+    implementation_targets:
+      - "03_THEORY/RUNTIME_SUPPLY_CHAIN.md"
+      - "docs/agent/RUNTIME_SUPPLY_CHAIN.md"
+      - "02_REGISTRIES/FAILURE_MODE_REGISTRY.yaml"
+    adaptation:
+      claude_code: "Use hooks at multiple lifecycle points, not only UserPromptSubmit."
+      codex: "Pair AGENTS.md with sandbox, approval, wrapper scripts, and evals."
+      project: "Track surfaces explicitly before adding skills, MCP, or subagents."
+    risks:
+      - "Security bureaucracy can overwhelm v0."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Prompt quarantine and task routing
+  # ------------------------------------------------------------
+
+  - id: PATTERN-004
+    title: "Prompt quarantine before tool execution"
+    level: runtime_guard
+    summary: "Bad, broad, foreign, expensive, angry, flattering, or contradictory prompts should be classified before they can trigger tool use."
+    protects_against:
+      - "foreign prompt execution"
+      - "full rewrite from bad prompt"
+      - "token burn"
+      - "project drift"
+    sources:
+      - S1-03
+      - S3-14
+      - S3-16
+      - S4C-06
+      - S4D-09
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+      - "04_KITS/v0_minimal/.claude/commands/preflight.md"
+      - "04_KITS/v0_minimal/.claude/commands/glyphcrack.md"
+    adaptation:
+      claude_code: "Use UserPromptSubmit hook for initial risk vector."
+      codex: "Use preflight instruction and wrapper/checklist before write actions."
+      project: "Route risky prompt to preflight, glyphcrack, safe-batch, or recovery."
+    risks:
+      - "Overblocking legitimate broad tasks without safe route."
+    status: must_use
+
+  - id: PATTERN-005
+    title: "Risk vector, not binary classifier"
+    level: workflow_artifact
+    summary: "Prompts should be classified by multiple risk hypotheses: project mismatch, cost, seed, deploy, UX, memory, document-instruction, and full-rewrite risk."
+    protects_against:
+      - "single-label task classifier"
+      - "hidden mixed-risk tasks"
+      - "false safe classification"
+    sources:
+      - S4B-03
+      - S4B-09
+      - S4F-05
+      - S5-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+      - "04_KITS/v0_minimal/.claude/commands/preflight.md"
+      - "03_THEORY/SAFETY_AS_DISTINCTION.md"
+    adaptation:
+      claude_code: "Hook returns additionalContext or denial reason with risk vector."
+      codex: "Preflight requires risk vector before broad work."
+      project: "Use risk vector to choose safe-batch, glyphcrack, audit-context, or stop."
+    risks:
+      - "Risk vector may become decorative unless tied to routing."
+    status: must_use
+
+  - id: PATTERN-006
+    title: "Glyphcrack weak-prompt breaker"
+    level: workflow_artifact
+    summary: "Weak, broad, contradictory, foreign, or self-destructive prompts must be broken, contradiction named, protected value identified, and bounded replacement task produced."
+    protects_against:
+      - "bad prompt obedience"
+      - "servile broad compliance"
+      - "architecture drift"
+    sources:
+      - S4C-01
+      - S4C-06
+      - S4D-03
+      - S5-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/glyphcrack.md"
+      - "03_THEORY/GLYPHCRACK_AND_PROMPT_QUARANTINE.md"
+    adaptation:
+      claude_code: "Route foreign/broad prompt to /glyphcrack before tool calls."
+      codex: "Use AGENTS.md rule: do not execute weak prompt directly."
+      project: "Keep glyphcrack short; no ritual expansion."
+    risks:
+      - "Can become theatrical refusal instead of bounded reframing."
+    status: must_use
+
+  - id: PATTERN-007
+    title: "Safety as distinction, not shutdown"
+    level: policy_like
+    summary: "A guard should identify the risk and route to a bounded safe alternative instead of only blocking."
+    protects_against:
+      - "guard as frustrating blocker"
+      - "user disables safety"
+      - "hook denial dead-end"
+    sources:
+      - S3-01
+      - S3-02
+      - S4C-06
+      - S4E-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+      - "04_KITS/v0_minimal/.claude/hooks/pretool_guard.py"
+      - "03_THEORY/SAFETY_AS_DISTINCTION.md"
+    adaptation:
+      claude_code: "Denial reason includes safe route: preflight, bounded command, narrower path, approval."
+      codex: "Instruction says blocked action should produce safe alternative."
+      project: "Do not stop in confusion unless explicit approval is required."
+    risks:
+      - "Safe alternative can accidentally become unsafe bypass."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Scope, batch, project identity
+  # ------------------------------------------------------------
+
+  - id: PATTERN-008
+    title: "Surgical change contract"
+    level: policy_like
+    summary: "Touch only what is required; do not improve neighboring code, format unrelated files, or clean adjacent areas opportunistically."
+    protects_against:
+      - "adjacent improvement creep"
+      - "large noisy diffs"
+      - "manual seed damage"
+    sources:
+      - S2-01
+      - S2-02
+      - S2-03
+      - S2-04
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
+      - "docs/agent/PROTECTED_VALUES.md"
+    adaptation:
+      claude_code: "Stop guard can later check changed files against declared scope."
+      codex: "Require diff summary and touched-file list."
+      project: "No opportunistic cleanup in target repos."
+    risks:
+      - "May prevent useful cleanup if scope is too narrow."
+    status: must_use
+
+  - id: PATTERN-009
+    title: "Safe-batch protocol"
+    level: workflow_artifact
+    summary: "'Stop micro-tasking' means bounded related work with max touched files, non-goals, protected seed work, budget class, rollback path, and stop condition."
+    protects_against:
+      - "batch misread as rewrite"
+      - "microtask oscillation"
+      - "full-repo cleanup"
+    sources:
+      - S4-02
+      - S4B-05
+      - S7-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/safe-batch.md"
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+    adaptation:
+      claude_code: "UserPromptSubmit detects phrase and adds context to use /safe-batch."
+      codex: "AGENTS.md defines phrase semantics."
+      project: "Use for Тимур's 'хватит мелкодрочки' workflow."
+    risks:
+      - "Agent can under-batch and annoy user if too timid."
+    status: must_use
+
+  - id: PATTERN-010
+    title: "Project identity before action"
+    level: architecture_guard
+    summary: "Before non-trivial action, name active project, working object, intended files, protected paths, neighboring projects, deployment boundaries, and rollback path."
+    protects_against:
+      - "project bleed"
+      - "shared VM contamination"
+      - "wrong target edits"
+    sources:
+      - S4-09
+      - S4-10
+      - S4B-11
+      - S5-01
+    implementation_targets:
+      - "docs/agent/PROJECT_IDENTITY.md"
+      - "04_KITS/v0_minimal/.claude/commands/preflight.md"
+      - "04_KITS/v0_minimal/.claude/hooks/pretool_guard.py"
+    adaptation:
+      claude_code: "Pretool guard can later block paths outside active project."
+      codex: "Preflight before writes/deploys."
+      project: "Profiles for Litops and ModerBober must define boundaries."
+    risks:
+      - "Can become bureaucratic for trivial local docs edits."
+    status: must_use
+
+  - id: PATTERN-011
+    title: "Working object, not only files"
+    level: architecture_guard
+    summary: "A file, card, issue, or prompt is a view of the working object; preflight must name the underlying service, source, registry, workset, field, deployment, or UI surface."
+    protects_against:
+      - "file/card fixation"
+      - "object-model damage"
+      - "local patch that breaks architecture"
+    sources:
+      - S4B-04
+      - S4B-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/preflight.md"
+      - "03_THEORY/SAFETY_AS_DISTINCTION.md"
+    adaptation:
+      claude_code: "Preflight includes working_object."
+      codex: "AGENTS.md rule: name underlying object before editing."
+      project: "Especially important for Litops registries and WhiteCrow bridges."
+    risks:
+      - "Agent can hallucinate object if repo docs are weak."
+    status: must_use
+
+  - id: PATTERN-012
+    title: "Bridge/export is not generation"
+    level: architecture_guard
+    summary: "Bridge operations package existing field, anchors, tensions, lineage, and target contract; they must not invent missing source material."
+    protects_against:
+      - "bridge-generation collapse"
+      - "loss of provenance"
+      - "fake WhiteCrow export"
+    sources:
+      - S4B-01
+    implementation_targets:
+      - "03_THEORY/RUNTIME_SUPPLY_CHAIN.md"
+      - "05_PROFILES/whitecrow/PROFILE.md"
+      - "06_EVALS/EVAL_SCENARIOS.md"
+    adaptation:
+      claude_code: "Bridge/export command checks required source objects."
+      codex: "Profile states missing anchors block export."
+      project: "Critical for Litops to WhiteCrow handoff."
+    risks:
+      - "May block creative drafting when user actually wants generation."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Budget, stdout, loops
+  # ------------------------------------------------------------
+
+  - id: PATTERN-013
+    title: "Budget as visible project resource"
+    level: workflow_artifact
+    summary: "Tokens, context, API credits, tool calls, stdout, subagents, retries, and review loops are budget surfaces that must be visible before expensive work."
+    protects_against:
+      - "token burn"
+      - "hidden cost"
+      - "review-loop cost explosion"
+    sources:
+      - S4-01
+      - S4B-06
+      - S4B-07
+      - S3-06
+      - S3-08
+    implementation_targets:
+      - "docs/agent/PROTECTED_VALUES.md"
+      - "04_KITS/v0_minimal/.claude/commands/preflight.md"
+      - "04_KITS/v0_minimal/.claude/commands/safe-batch.md"
+    adaptation:
+      claude_code: "Preflight and stop summaries include budget_class."
+      codex: "AGENTS.md requires cost risk before broad work."
+      project: "Budget class low/medium/high/critical."
+    risks:
+      - "Manual estimation can be rough."
+    status: must_use
+
+  - id: PATTERN-014
+    title: "Stdout budgeting"
+    level: runtime_guard
+    summary: "High-output commands must be bounded with quiet flags, redirection, log files, head/tail, max-count, or scoped paths."
+    protects_against:
+      - "massive stdout burn"
+      - "context pollution"
+    sources:
+      - S3-04
+      - S3-06
+      - S3-12
+      - S3-13
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/pretool_guard.py"
+      - "04_KITS/v0_minimal/.claude/commands/preflight.md"
+    adaptation:
+      claude_code: "PreToolUse blocks high-stdout Bash without output bound."
+      codex: "Shell wrapper or instructions require bounded output."
+      project: "Avoid npm install/docker build/pytest -vv/grep -R/cat large files."
+    risks:
+      - "Tail/head can hide relevant error context."
+    status: must_use
+
+  - id: PATTERN-015
+    title: "No unattended loops without caps"
+    level: runtime_guard
+    summary: "Recurring, retry-until-success, loop, or background agent tasks require max_runs, max_time, max_cost/model, and stop condition."
+    protects_against:
+      - "overnight token burn"
+      - "retry loop cost explosion"
+      - "billing surprises"
+    sources:
+      - S3-08
+      - S3-12
+      - S4-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+      - "06_EVALS/EVAL_SCENARIOS.md"
+    adaptation:
+      claude_code: "Prompt guard flags loop/periodic/batch review requests."
+      codex: "AGENTS.md forbids unattended loops without caps."
+      project: "No background checking until v1."
+    risks:
+      - "May block legitimate scheduled automation until explicit caps exist."
+    status: must_use
+
+  - id: PATTERN-016
+    title: "Repeat router"
+    level: workflow_artifact
+    summary: "When repetition appears, classify it as no-progress loop, necessary deepening, scene shift required, stale instruction, or recovery needed."
+    protects_against:
+      - "no-progress loop"
+      - "useful repetition killed too early"
+      - "harmful repetition romanticized"
+    sources:
+      - S4D-04
+      - S3-13
+      - S4D-07
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/repeat-router.md"
+      - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
+    adaptation:
+      claude_code: "Use /repeat-router after similar outputs or repeated commands."
+      codex: "AGENTS.md allows partial/stop/recover if loop detected."
+      project: "No infinite reflective loops."
+    risks:
+      - "Can interrupt legitimate iterative debugging."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Commands, Bash, hooks
+  # ------------------------------------------------------------
+
+  - id: PATTERN-017
+    title: "Compound command decomposition"
+    level: runtime_guard
+    summary: "Shell commands must be split and inspected across &&, ||, ;, pipes, substitutions, and newlines before permission matching."
+    protects_against:
+      - "compound Bash bypass"
+      - "destructive command hidden behind allowed command"
+    sources:
+      - S2-05
+      - S2-06
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/pretool_guard.py"
+    adaptation:
+      claude_code: "PreToolUse Bash hook does rough split in v0 and real parser in v1."
+      codex: "Shell wrapper should inspect compound commands."
+      project: "v0 skeleton splits conservatively."
+    risks:
+      - "Naive parser can miss shell edge cases."
+    status: must_use
+
+  - id: PATTERN-018
+    title: "Quiet hooks by default"
+    level: runtime_guard
+    summary: "Hooks must not print large payloads or memory content into model context; verbose diagnostics go to files."
+    protects_against:
+      - "hook stdout token leak"
+      - "context pollution"
+    sources:
+      - S3-04
+      - S2-06
+      - S1-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+      - "04_KITS/v0_minimal/.claude/hooks/pretool_guard.py"
+      - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
+    adaptation:
+      claude_code: "Hook output is compact JSON with reason and route."
+      codex: "Wrappers log to files, not chat context."
+      project: "No verbose event logger in normal mode."
+    risks:
+      - "Harder to debug without explicit debug mode."
+    status: must_use
+
+  - id: PATTERN-019
+    title: "Fail closed for dangerous undefined cases"
+    level: runtime_guard
+    summary: "If project/path/scope membership is undefined for a dangerous or expensive action, route to preflight or block."
+    protects_against:
+      - "undefined treated as safe"
+      - "wrong project path"
+      - "secrets exposure"
+    sources:
+      - S4B-09
+      - S1-02
+      - S3-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/pretool_guard.py"
+      - "docs/agent/PROJECT_IDENTITY.md"
+    adaptation:
+      claude_code: "Pretool guard blocks unknown dangerous paths."
+      codex: "Preflight required for unknown project/deploy paths."
+      project: "Only dangerous/expensive actions fail closed, not trivial reads."
+    risks:
+      - "Overblocking if applied to harmless operations."
+    status: must_use
+
+  - id: PATTERN-020
+    title: "Stop hook review gate"
+    level: runtime_guard
+    summary: "Stop-phase check can block or downgrade fake completion, dirty worktree, scope drift, seed edits, or missing evidence."
+    protects_against:
+      - "fake done"
+      - "unreviewed changes"
+      - "scope drift"
+      - "dirty worktree"
+    sources:
+      - S2-10
+      - S2-04
+      - S1-03
+      - S4D-07
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
+    adaptation:
+      claude_code: "Stop hook checks done claim evidence in v0."
+      codex: "Post-run summary must declare honest status."
+      project: "v1 can check git diff and protected seed paths."
+    risks:
+      - "Stop hook can annoy if too strict before evidence definitions mature."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # UX and product quality
+  # ------------------------------------------------------------
+
+  - id: PATTERN-021
+    title: "UX is part of done"
+    level: workflow_artifact
+    summary: "Frontend/user-facing changes are not done if they technically work but are unusable; UX review is a separate gate."
+    protects_against:
+      - "technically works but unusable UI"
+      - "backend-only completion"
+    sources:
+      - S2-10
+      - S4B-04
+      - S4B-07
+    implementation_targets:
+      - "docs/agent/UX_ARCHITECTURE_GATE.md"
+      - "06_EVALS/EVAL_SCENARIOS.md"
+      - "future .claude/agents/ux-reviewer.md"
+    adaptation:
+      claude_code: "v0 records UX surface in preflight; v1 may add ux-reviewer."
+      codex: "AGENTS.md says UX surface increases risk."
+      project: "Do not add ux-reviewer until v0 guards pass."
+    risks:
+      - "Can trigger expensive browser testing too early."
+    status: maybe_use
+
+  - id: PATTERN-022
+    title: "No silent fallback"
+    level: policy_like
+    summary: "Do not hide failure through mocks, empty catches, graceful lies, fake provider success, or silent fallback."
+    protects_against:
+      - "mock instead of live behavior"
+      - "false green"
+      - "hidden production failure"
+    sources:
+      - S2-02
+      - S4B-10
+      - S4-09
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
+      - "06_EVALS/EVAL_SCENARIOS.md"
+    adaptation:
+      claude_code: "Stop guard TODO detects mock/silent fallback."
+      codex: "Final status must report failures."
+      project: "ModerBober profile needs live-provider caution."
+    risks:
+      - "May reject legitimate temporary mock if explicitly requested."
+    status: must_use
+
+  - id: PATTERN-023
+    title: "No forced completion"
+    level: policy_like
+    summary: "Agent must not claim done without evidence; valid statuses include done, partial, blocked, needs-review, unsafe-without-preflight, insufficient-context."
+    protects_against:
+      - "fake done"
+      - "premature closure"
+      - "forced completion"
+    sources:
+      - S4D-07
+      - S4E-04
+      - S4E-05
+      - S6-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "04_KITS/v0_minimal/.claude/hooks/stop_guard.py"
+      - "docs/agent/PROTECTED_VALUES.md"
+    adaptation:
+      claude_code: "Stop hook downgrades completion claim without evidence."
+      codex: "Final response includes honest status."
+      project: "Partial is better than fake done."
+    risks:
+      - "Can create too many partial statuses without acceptance criteria."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Memory, recovery, trace
+  # ------------------------------------------------------------
+
+  - id: PATTERN-024
+    title: "Memory is not authority"
+    level: memory_recovery
+    summary: "Recovered memory, echo signatures, failure notes, traces, and rule candidates require provenance, scope, trust level, and active/superseded status before use."
+    protects_against:
+      - "recovered memory becomes policy"
+      - "memory poisoning"
+      - "stale memory execution"
+    sources:
+      - S4D-01
+      - S4E-01
+      - S4E-02
+      - S4F-01
+      - S4F-02
+    implementation_targets:
+      - "03_THEORY/MEMORY_SURFACE_MODEL.md"
+      - "04_KITS/v0_minimal/docs/agent/MEMORY_SURFACE_MODEL.md"
+      - "02_REGISTRIES/FAILURE_MODE_REGISTRY.yaml"
+    adaptation:
+      claude_code: "recover-agent emits memory surface report."
+      codex: "AGENTS.md says recovered does not mean verified."
+      project: "Memory records have source/provenance/trust/status."
+    risks:
+      - "Too much metadata can slow v0; keep schema compact."
+    status: must_use
+
+  - id: PATTERN-025
+    title: "Epistemic status for recovered material"
+    level: memory_recovery
+    summary: "Recovered content must be labeled recalled, anchored, inferred, or verified before it can guide decisions."
+    protects_against:
+      - "confabulated recall treated as evidence"
+      - "inferred memory used as fact"
+    sources:
+      - S4F-01
+      - S4C-01
+      - S4C-02
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/recover-agent.md"
+      - "03_THEORY/MEMORY_SURFACE_MODEL.md"
+    adaptation:
+      claude_code: "recover-agent output includes epistemic_status."
+      codex: "AGENTS.md prohibits unverified memory authorizing action."
+      project: "Only verified or explicitly approved anchored material can authorize tool use or policy changes."
+    risks:
+      - "Agent may overclaim verification."
+    status: must_use
+
+  - id: PATTERN-026
+    title: "Recovery loader, not recovery apology"
+    level: memory_recovery
+    summary: "After context loss or behavior degradation, agent should run a structured recovery state machine instead of apologizing or dumping archives."
+    protects_against:
+      - "recovery as apology"
+      - "context-loss confusion"
+      - "archive replay"
+    sources:
+      - S4C-01
+      - S4C-02
+      - S4F-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/recover-agent.md"
+      - "03_THEORY/ASSUNA_MG_OPERATIONAL_TRANSLATION.md"
+    adaptation:
+      claude_code: "Use /recover-agent for context loss/session break."
+      codex: "Use recovery checklist before continuing."
+      project: "Recover active project, rules, protected values, trace, evidence gap, next bounded action."
+    risks:
+      - "Recovery can become long ritual if not bounded."
+    status: must_use
+
+  - id: PATTERN-027
+    title: "Recovery sufficiency stop"
+    level: memory_recovery
+    summary: "Recovery should retrieve until evidence gap is closed enough for next bounded action, then stop; do not load archives for their own sake."
+    protects_against:
+      - "infinite reconsolidation"
+      - "token-tumor recovery"
+      - "recovery retrieval runaway"
+    sources:
+      - S4D-02
+      - S4E-02
+      - S4F-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/recover-agent.md"
+      - "03_THEORY/MEMORY_SURFACE_MODEL.md"
+    adaptation:
+      claude_code: "recover-agent emits sufficient_for_next_action."
+      codex: "Do not continue retrieval once core rules and next action are sufficient."
+      project: "Evidence gap drives retrieval, not desire for full restoration."
+    risks:
+      - "May stop too early if evidence gap badly classified."
+    status: must_use
+
+  - id: PATTERN-028
+    title: "Triple-addressed rule retrieval"
+    level: memory_recovery
+    summary: "Important rules are recovered by filename, title, signature, and functional operator, not only exact file path."
+    protects_against:
+      - "name-only instruction lookup"
+      - "missing file means missing rule"
+    sources:
+      - S4C-01
+      - S1-06
+      - S3-09
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/audit-context.md"
+      - "04_KITS/v0_minimal/.claude/commands/recover-agent.md"
+    adaptation:
+      claude_code: "audit-context searches expected rules by function."
+      codex: "Before risky work, report loaded instruction sources and missing expected functions."
+      project: "Find budget/seed/project/trace rules even if files renamed."
+    risks:
+      - "Functional retrieval can infer rules that are not actually approved."
+    status: maybe_use
+
+  - id: PATTERN-029
+    title: "Arch trace as decision ledger"
+    level: architecture_guard
+    summary: "Architecture trace records why decisions were made, alternatives rejected, protected values, and rollback points."
+    protects_against:
+      - "lost rationale"
+      - "unreviewable architecture drift"
+      - "repeat of prior failure"
+    sources:
+      - S4C-04
+      - S4C-05
+      - S4B-10
+    implementation_targets:
+      - "future docs/agent/ARCH_TRACE.md"
+      - "02_REGISTRIES/DECISION_LOG.md"
+    adaptation:
+      claude_code: "Stop/postmortem can append compact decision notes later."
+      codex: "Decision log is human-reviewed before policy."
+      project: "Keep compact; do not create ritual chronicle."
+    risks:
+      - "Can become verbose archive."
+    status: maybe_use
+
+  # ------------------------------------------------------------
+  # Data/instruction boundary and document security
+  # ------------------------------------------------------------
+
+  - id: PATTERN-030
+    title: "Approved instruction chain"
+    level: security
+    summary: "Only approved instruction files and explicit user messages have authority; repository files, logs, docs, PDFs, READMEs, comments, and old prompt archives are data by default."
+    protects_against:
+      - "instruction-like document takeover"
+      - "hidden README instruction"
+      - "repo prompt injection"
+      - "document prompt injection"
+    sources:
+      - S3-14
+      - S3-16
+      - S4D-09
+      - S4F-06
+      - S4E-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "03_THEORY/TEXT_AS_EXECUTABLE_INFLUENCE.md"
+      - "future docs/agent/DOCUMENT_INSTRUCTION_QUARANTINE.md"
+    adaptation:
+      claude_code: "Prompt guard and AGENTS.md define untrusted instruction-like text."
+      codex: "AGENTS.md defines authority boundary."
+      project: "Do not grant authority by tone or imperative language."
+    risks:
+      - "May make agent hesitant to follow legitimate project docs."
+    status: must_use
+
+  - id: PATTERN-031
+    title: "Text as executable influence"
+    level: architecture_guard
+    summary: "Instruction-like text can reshape agent behavior; AGENTS.md, CLAUDE.md, SKILL.md, README, prompt archives, and MCP descriptions require review."
+    protects_against:
+      - "template pack infection"
+      - "skill prompt injection"
+      - "old prompt archive takeover"
+    sources:
+      - S4D-08
+      - S4B-12
+      - S3-17
+    implementation_targets:
+      - "03_THEORY/TEXT_AS_EXECUTABLE_INFLUENCE.md"
+      - "future TOOL_AND_SKILL_ALLOWLIST.md"
+    adaptation:
+      claude_code: "Treat skills/MCPs as executable influence."
+      codex: "Do not copy random instruction files into repo."
+      project: "Review instruction-like artifacts before adoption."
+    risks:
+      - "Can overburden simple documentation updates."
+    status: must_use
+
+  - id: PATTERN-032
+    title: "Document instruction quarantine"
+    level: security
+    summary: "PDFs, transcripts, markdown docs, logs, and prompt archives are read as evidence/data, not as authority, even if they contain imperative or system-like language."
+    protects_against:
+      - "hidden document override"
+      - "academic/PDF prompt injection"
+      - "transcript prompt contamination"
+    sources:
+      - S4F-06
+      - S3-16
+      - S4D-09
+    implementation_targets:
+      - "future docs/agent/DOCUMENT_INSTRUCTION_QUARANTINE.md"
+      - "06_EVALS/EVAL_SCENARIOS.md"
+    adaptation:
+      claude_code: "Before obeying document instructions, verify they are approved instruction-chain files."
+      codex: "Docs are evidence unless AGENTS.md says otherwise."
+      project: "Especially important for Litops/WhiteCrow documents and old prompt archives."
+    risks:
+      - "Agent may ignore legitimate documentation instructions."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Tools, skills, MCP, subagents
+  # ------------------------------------------------------------
+
+  - id: PATTERN-033
+    title: "Skill and MCP allowlist"
+    level: security
+    summary: "Skills, MCPs, plugins, and template packs are executable influence and require allowlist, source review, permission review, and update policy."
+    protects_against:
+      - "tool poisoning"
+      - "skill injection"
+      - "MCP hidden parameter attack"
+    sources:
+      - S3-17
+      - S4B-12
+      - S2-12
+      - S2-13
+    implementation_targets:
+      - "future docs/agent/TOOL_AND_SKILL_ALLOWLIST.md"
+      - "08_INSTALL/claude_code_profile.md"
+    adaptation:
+      claude_code: "No unreviewed MCP/skill install in v0."
+      codex: "No tool packs without explicit profile."
+      project: "Defer MCP/skills to v1."
+    risks:
+      - "Could slow useful tool adoption."
+    status: must_use
+
+  - id: PATTERN-034
+    title: "Subagent output quarantine"
+    level: security
+    summary: "Subagent output is a report, not a rule; it becomes policy only through review and acceptance."
+    protects_against:
+      - "subagent report becomes law"
+      - "multi-agent memory poisoning"
+      - "agent council as authority"
+    sources:
+      - S1-04
+      - S2-10
+      - S2-11
+      - S4F-04
+      - S4B-08
+    implementation_targets:
+      - "future docs/agent/SUBAGENT_OUTPUT_QUARANTINE.md"
+      - "04_KITS/v0_minimal/AGENTS.md"
+    adaptation:
+      claude_code: "Do not add subagents in v0; later quarantine their outputs."
+      codex: "Reviewer output remains candidate."
+      project: "No agent council auto-policy."
+    risks:
+      - "Can underuse valuable reviewer output."
+    status: must_use
+
+  - id: PATTERN-035
+    title: "Agents serve the scene"
+    level: architecture_guard
+    summary: "Agents are service/analytic/reflexive layers over project activity, not the core product or authority."
+    protects_against:
+      - "agent zoo"
+      - "agents-as-product fallacy"
+      - "over-orchestration"
+    sources:
+      - S4B-08
+      - S4D-05
+      - S4B-02
+    implementation_targets:
+      - "00_MANIFEST/DESIGN_PRINCIPLES.md"
+      - "03_THEORY/ASSUNA_MG_OPERATIONAL_TRANSLATION.md"
+    adaptation:
+      claude_code: "Subagents only after transition/risk class exists."
+      codex: "AGENTS.md says do not create agents/hooks/skills without scope."
+      project: "v0 has no subagents."
+    risks:
+      - "Could delay useful role separation."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Evaluation and trust
+  # ------------------------------------------------------------
+
+  - id: PATTERN-036
+    title: "Eval before trust"
+    level: eval_postmortem
+    summary: "A guard kit is trusted only after it passes scenarios simulating actual failure modes."
+    protects_against:
+      - "beautiful markdown false confidence"
+      - "untested hooks"
+      - "static instruction placebo"
+    sources:
+      - S4E-04
+      - S4E-05
+      - S4E-06
+      - S1-15
+    implementation_targets:
+      - "06_EVALS/EVAL_SCENARIOS.md"
+      - "06_EVALS/DYNAMIC_EVAL_SEEDS.md"
+      - "00_MANIFEST/DESIGN_PRINCIPLES.md"
+    adaptation:
+      claude_code: "Test hooks with synthetic payloads before relying on them."
+      codex: "Run prompt/eval scenarios manually before install."
+      project: "v0 evals first, automation later."
+    risks:
+      - "Eval suite can overgrow before kit exists."
+    status: must_use
+
+  - id: PATTERN-037
+    title: "Dynamic mixed-intent evals"
+    level: eval_postmortem
+    summary: "Eval scenarios must include realistic mixed tasks, not only fixed dangerous commands."
+    protects_against:
+      - "static eval blindness"
+      - "mixed-risk false safe"
+      - "over-defense"
+    sources:
+      - S4E-06
+      - S4E-04
+      - S4F-03
+    implementation_targets:
+      - "06_EVALS/DYNAMIC_EVAL_SEEDS.md"
+      - "06_EVALS/EVAL_SCENARIOS.md"
+    adaptation:
+      claude_code: "Test UI+deploy+seed+foreign prompt in one scenario."
+      codex: "Use mixed-intent prompts as acceptance tests."
+      project: "Add dynamic seeds after v0 static scenarios."
+    risks:
+      - "Can be hard to score objectively."
+    status: maybe_use
+
+  - id: PATTERN-038
+    title: "Hybrid guard, not LLM judge"
+    level: security
+    summary: "Prompt injection and contamination decisions should combine deterministic rules, authority boundaries, runtime permissions, LLM classification, and evals."
+    protects_against:
+      - "LLM guard false confidence"
+      - "known-answer detector bypass"
+      - "regex-only bypass"
+    sources:
+      - S4F-05
+      - S4B-13
+      - S4E-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/hooks/prompt_guard.py"
+      - "03_THEORY/RUNTIME_SUPPLY_CHAIN.md"
+    adaptation:
+      claude_code: "v0 uses deterministic patterns; v1 may add LLM classifier but not alone."
+      codex: "AGENTS.md says LLM classifier alone cannot authorize dangerous action."
+      project: "Deterministic guard wins over LLM safe claim for protected surfaces."
+    risks:
+      - "Hybrid system can become complex."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Implementation order and deployment
+  # ------------------------------------------------------------
+
+  - id: PATTERN-039
+    title: "Proving-ground first"
+    level: workflow_artifact
+    summary: "Start with a small vertical slice that proves the system works before adding subagents, MCPs, skills, or advanced orchestration."
+    protects_against:
+      - "guard-system overbuild"
+      - "new complexity surface"
+      - "implementation sprawl"
+    sources:
+      - S4B-05
+      - S5-01
+      - S6-01
+    implementation_targets:
+      - "00_MANIFEST/DESIGN_PRINCIPLES.md"
+      - "08_INSTALL/copy_v0_checklist.md"
+      - "04_KITS/v0_minimal/"
+    adaptation:
+      claude_code: "Install AGENTS/CLAUDE/hooks/commands first."
+      codex: "Install v0 profile first."
+      project: "No v1 artifacts before v0 evals."
+    risks:
+      - "v0 may feel underpowered."
+    status: must_use
+
+  - id: PATTERN-040
+    title: "Environment capability audit before install"
+    level: eval_postmortem
+    summary: "Do not assume target machine supports Claude Code CLI hooks, Unix paths, or the same runtime as documentation; audit environment first."
+    protects_against:
+      - "nonexistent tooling assumption"
+      - "Windows/Cowork mismatch"
+      - "unusable install instructions"
+    sources:
+      - S4B-11
+      - S1-03
+      - S1-02
+    implementation_targets:
+      - "07_HANDOFF_PROMPTS/RUN_ENVIRONMENT_AUDIT.md"
+      - "08_INSTALL/claude_code_profile.md"
+      - "00_MANIFEST/PROJECT_CHARTER.md"
+    adaptation:
+      claude_code: "Verify CLI/hook support before trusting hooks."
+      codex: "Use wrapper/profile if Claude hooks unavailable."
+      project: "First target install must audit environment."
+    risks:
+      - "Can delay actual kit use."
+    status: must_use
+
+  - id: PATTERN-041
+    title: "No handoff before corpus preservation"
+    level: architecture_guard
+    summary: "Do not ask Claude/Codex to install the kit into a target repo before sources, patterns, failures, and decisions are preserved."
+    protects_against:
+      - "research lost in chat"
+      - "agent acts without rationale"
+      - "unreproducible kit"
+    sources:
+      - S8-01
+      - S7-01
+      - S5-01
+    implementation_targets:
+      - "02_REGISTRIES/DECISION_LOG.md"
+      - "07_HANDOFF_PROMPTS/CREATE_KIT_REPO.md"
+    adaptation:
+      claude_code: "No target install until registry backfill exists."
+      codex: "No implementation handoff without source/pattern/failure registries."
+      project: "protected-agent-kit is canonical source."
+    risks:
+      - "May defer useful install too long."
+    status: must_use
+
+  # ------------------------------------------------------------
+  # Personal-operational temperament
+  # ------------------------------------------------------------
+
+  - id: PATTERN-042
+    title: "Operational temperament, not personality mimicry"
+    level: policy_like
+    summary: "Do not imitate the user's style; extract operational invariants: budget discipline, anti-slop, project identity, traceability, non-servility, seed protection."
+    protects_against:
+      - "personality cosplay"
+      - "style without safety"
+      - "decorative Assuna/MG language"
+    sources:
+      - S4-08
+      - S4C-03
+      - S4C-01
+    implementation_targets:
+      - "03_THEORY/ASSUNA_MG_OPERATIONAL_TRANSLATION.md"
+      - "04_KITS/v0_minimal/AGENTS.md"
+    adaptation:
+      claude_code: "Recovery signatures are operational commands, not style triggers."
+      codex: "AGENTS.md defines behavior, not tone."
+      project: "No ritual style in runtime guard files."
+    risks:
+      - "Over-sanitizing can lose useful anti-servile stance."
+    status: must_use
+
+  - id: PATTERN-043
+    title: "Truth microcheck"
+    level: workflow_artifact
+    summary: "Before risky compliance under anger, flattery, urgency, or pressure, run a short anti-accommodation check."
+    protects_against:
+      - "accommodation drift"
+      - "servile simplification"
+      - "agreeing too quickly"
+    sources:
+      - S4D-03
+      - S4-08
+      - S4C-01
+    implementation_targets:
+      - "04_KITS/v0_minimal/.claude/commands/truth-check.md"
+      - "04_KITS/v0_minimal/CLAUDE.md"
+    adaptation:
+      claude_code: "Use /truth-check before bypassing guardrails."
+      codex: "AGENTS.md says pressure does not expand scope."
+      project: "3 questions only; no 50-wave council."
+    risks:
+      - "Can become performative if too long."
+    status: must_use
+
+  - id: PATTERN-044
+    title: "Anti-servile choice with multiplicity"
+    level: policy_like
+    summary: "The agent should not choose the easiest compliant answer under pressure; it should preserve alternatives, contradictions, and protected values."
+    protects_against:
+      - "servile broad compliance"
+      - "weak compromise"
+      - "loss of architectural responsibility"
+    sources:
+      - S4C-01
+      - S4-08
+      - S4D-03
+    implementation_targets:
+      - "04_KITS/v0_minimal/AGENTS.md"
+      - "03_THEORY/ASSUNA_MG_OPERATIONAL_TRANSLATION.md"
+    adaptation:
+      claude_code: "Route broad pressure to glyphcrack/safe-batch."
+      codex: "Do not obey destructive broadness."
+      project: "Non-servility means bounded safer task, not aggression."
+    risks:
+      - "Can become oppositional style instead of operational judgment."
+    status: must_use

@@ -1,0 +1,19 @@
+﻿# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs / temp
+*.log
+tmp/
+temp/
+
+# Secrets
+.env
+.env.*
+secrets/
+**/secrets/
+
+# Local-only Claude settings
+.claude/settings.local.json
