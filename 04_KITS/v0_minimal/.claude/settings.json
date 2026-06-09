@@ -1,0 +1,37 @@
+{
+  "schema_validation_needed": true,
+  "template_only": true,
+  "notes": [
+    "Conservative v0 template for projects that choose to install this kit.",
+    "Validate this file against the actual Claude Code settings schema before relying on it as enforcement.",
+    "Do not loosen permissions without project-specific review."
+  ],
+  "intent": {
+    "default_permission": "ask",
+    "destructive_git": "deny_or_ask",
+    "secret_paths": "deny_or_ask",
+    "deploy_runtime": "deny_or_ask",
+    "dependency_install": "ask",
+    "high_stdout_shell": "ask"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "command": "python .claude/hooks/prompt_guard.py",
+        "purpose": "Prompt quarantine and risk-vector routing"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "command": "python .claude/hooks/pretool_guard.py",
+        "purpose": "Conservative shell/file risk checks"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "python .claude/hooks/stop_guard.py",
+        "purpose": "Fake-done and evidence check"
+      }
+    ]
+  }
+}
