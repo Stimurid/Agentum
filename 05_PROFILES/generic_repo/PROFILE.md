@@ -56,6 +56,23 @@ Conservative default profile for an ordinary coding repository.
 - stdout burn
 - fake done
 
+## Active organs
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+## Relevant deficits
+
+- `DEFICIT-001` project bleed and foreign execution
+- `DEFICIT-003` memory becomes fake authority
+- `DEFICIT-004` critic absence permits pseudo-rigor
+
+## Organs usually not installed first
+
+- `ORGAN-002` Litops Digestion Organ
+- `ORGAN-004` WhiteCrow Manuscript Field Organ
+
 ## Install notes
 
 Start with copy-based install, not submodule, unless the target repo already has strong local discipline.

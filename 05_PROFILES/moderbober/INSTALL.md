@@ -14,6 +14,14 @@
 - status and budget docs
 - target-specific profile wording
 
+## Organ set
+
+Install this production-cautious set first:
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
 ## Files not to copy
 
 - archive and registries as runtime files

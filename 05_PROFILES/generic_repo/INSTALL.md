@@ -16,6 +16,16 @@
 - command markdowns
 - runtime docs
 
+## Organ set
+
+Install this bounded set first:
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+Do not install project-specific organs until the generic guard slice is stable.
+
 ## Files not to copy
 
 - `01_RESEARCH_ARCHIVE/**`

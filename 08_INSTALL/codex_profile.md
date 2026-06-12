@@ -23,3 +23,7 @@ Context-only files do not block unsafe action on their own.
 - verify local command model
 - run proving-ground prompts manually
 - inspect bounded batch behavior before trusting the install
+
+## Organ-set note
+
+Codex installation should bind sandbox and approval behavior to an explicit organ set, not only to copied markdown context.

@@ -14,6 +14,16 @@
 - document quarantine docs
 - selected hooks and commands
 
+## Organ set
+
+Install this provenance-sensitive set:
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-003` MemoryWorkbench Reconstructive Memory
+- `ORGAN-004` WhiteCrow Manuscript Field Organ
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
 ## Files not to copy
 
 - archive and registries as runtime text

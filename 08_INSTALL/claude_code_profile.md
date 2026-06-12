@@ -23,3 +23,7 @@ Claude Code markdown instructions are not hard enforcement by themselves.
 - hook syntax check
 - proving-ground prompts
 - local approval review before target install
+
+## Organ-set note
+
+Claude Code installation should name the active organ set explicitly rather than copying a generic guard blob without organ intent.

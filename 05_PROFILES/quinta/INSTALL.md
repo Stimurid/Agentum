@@ -13,6 +13,15 @@
 - selected project identity and status docs
 - persona fragments only if explicitly wanted in persona prompts
 
+## Organ set
+
+Install this split set:
+
+- dry guard set = `ORGAN-001`, `ORGAN-005`, `ORGAN-006`
+- memory-sensitive extension = `ORGAN-003`
+
+Keep persona fragments outside the dry guard set.
+
 ## Files not to copy
 
 - archive and registries as runtime files

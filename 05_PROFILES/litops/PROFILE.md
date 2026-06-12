@@ -55,6 +55,26 @@ Profile for Litops as a corpus machine with strong internal object distinctions.
 - memory not authority
 - mixed dynamic task
 
+## Active organs
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-002` Litops Digestion Organ
+- `ORGAN-003` MemoryWorkbench Reconstructive Memory
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+## Relevant deficits
+
+- `DEFICIT-001` project bleed and foreign execution
+- `DEFICIT-002` meaning fragments disappear in working context
+- `DEFICIT-003` memory becomes fake authority
+- `DEFICIT-004` critic absence permits pseudo-rigor
+
+## Organs not to flatten away
+
+- `ORGAN-002` digestion must remain object-aware
+- `ORGAN-003` memory must remain reconstructive, not mere retrieval
+
 ## Install notes
 
 Litops install must remain object-aware. Copy only compact runtime slices and adapt wording to Litops objects.

@@ -1,0 +1,295 @@
+# DEFICIT_REGISTRY.yaml
+#
+# Deficit registry for Agentum.
+#
+# This file stores recurrent project pressure that may require:
+# - a new organ
+# - a guard change
+# - a profile/install correction
+# - a memory or orchestration fix
+#
+# Schema:
+# - id: stable deficit id
+#   title: compact deficit name
+#   status: open | testing | mitigated | resolved | archived
+#   severity: low | medium | high | critical
+#   observed_in_project:
+#     - project or ecosystem scope
+#   observed_in_layer:
+#     - runtime | memory | prompt | retrieval | review | orchestration | install | governance
+#   source_fragment:
+#     - minimal source symptom or trigger
+#   evidence_refs:
+#     - file paths, failure ids, eval ids, or notes
+#   repeated_count: exact or approximate recurrence marker
+#   failure_type:
+#     - mismatch | omission | false_confidence | drift | overload | bleed | collapse | authority_confusion
+#   semantic_loss: what meaning, continuity, or function is being damaged
+#   suspected_cause:
+#     - current best explanations
+#   scene_signature:
+#     - recurring scene where the deficit shows up
+#   memory_signature:
+#     - related memory regime confusion
+#   required_capability:
+#     - what capability is missing
+#   current_workaround:
+#     - how humans or existing organs currently compensate
+#   candidate_organs:
+#     - related organ ids or compact names
+#   candidate_non_organ_fix:
+#     - config / profile / guard / process alternatives
+#   test_scene:
+#     - bounded scene for validating resolution
+#   evaluation_criteria:
+#     - what counts as actual mitigation
+#   resolved_by:
+#     - selected organ, profile, guard, or process change
+#   residual_risk:
+#     - what remains dangerous even after mitigation
+#   notes: optional notes
+
+deficits:
+
+  - id: DEFICIT-001
+    title: "Project bleed and foreign execution"
+    status: mitigated
+    severity: critical
+    observed_in_project:
+      - ecosystem
+      - Agentum
+      - Litops
+      - WhiteCrow
+      - ModerBober
+      - Quinta
+    observed_in_layer:
+      - runtime
+      - prompt
+      - governance
+    source_fragment:
+      - "Old or foreign prompt is treated as belonging to the active repo."
+    evidence_refs:
+      - FAILURE-001
+      - FAILURE-002
+      - "04_KITS/v0_minimal/AGENTS.md"
+    repeated_count: "high"
+    failure_type:
+      - bleed
+      - mismatch
+    semantic_loss: "The working object and project identity are replaced by a foreign task line."
+    suspected_cause:
+      - "Weak project identity check."
+      - "Prompt accepted before routing."
+    scene_signature:
+      - "broad or imported prompt enters wrong project during active work"
+    memory_signature:
+      - "recalled task line overrides present project state"
+    required_capability:
+      - "identity-first routing and quarantine"
+    current_workaround:
+      - "Manual human correction and repeated restatement of project boundaries."
+    candidate_organs:
+      - ORGAN-001
+      - ORGAN-006
+    candidate_non_organ_fix:
+      - "prompt guard"
+      - "install profile contract"
+    test_scene:
+      - "foreign prompt in active repo"
+    evaluation_criteria:
+      - "Foreign prompt is routed before file mutation starts."
+    resolved_by:
+      - "v0_minimal prompt guard and project identity layer"
+    residual_risk:
+      - "Cross-project ecosystems remain naturally bleed-prone."
+
+  - id: DEFICIT-002
+    title: "Meaning fragments disappear in working context"
+    status: open
+    severity: high
+    observed_in_project:
+      - ecosystem
+      - memory-workbench
+      - Litops
+      - Agentum
+    observed_in_layer:
+      - memory
+      - orchestration
+      - retrieval
+    source_fragment:
+      - "Relevant fragments drop out or become distorted during active assembly."
+    evidence_refs:
+      - "03_THEORY/UNIVERSAL_LLM_BLOCK_MODEL.md"
+      - "03_THEORY/AGENT_ONTOLOGY.md"
+    repeated_count: "high"
+    failure_type:
+      - omission
+      - drift
+      - overload
+    semantic_loss: "The fate of meaning fragments is not visible, so continuity and method degrade silently."
+    suspected_cause:
+      - "Context assembly is under-modeled."
+      - "Observability focuses on tools rather than meaning fate."
+    scene_signature:
+      - "large multi-source task with long conceptual line"
+    memory_signature:
+      - "verbatim, compressed, and task-packet layers are blended without explicit regime boundary"
+    required_capability:
+      - "active context assembly plus meaning-fragment observability"
+    current_workaround:
+      - "Manual reminders, repeated summaries, and ad hoc reconstruction."
+    candidate_organs:
+      - ORGAN-003
+      - ORGAN-006
+    candidate_non_organ_fix:
+      - "context observability schema"
+      - "working-field log"
+    test_scene:
+      - "recover a long conceptual line across fragmented sessions"
+    evaluation_criteria:
+      - "The run can show what entered, dropped, dominated, or distorted."
+    resolved_by:
+      - ""
+    residual_risk:
+      - "Large-field cognition will always risk compression damage."
+
+  - id: DEFICIT-003
+    title: "Memory becomes fake authority"
+    status: mitigated
+    severity: high
+    observed_in_project:
+      - ecosystem
+      - memory-workbench
+      - Agentum
+    observed_in_layer:
+      - memory
+      - runtime
+    source_fragment:
+      - "Recovered or old material is obeyed as if it were current instruction."
+    evidence_refs:
+      - FAILURE-004
+      - "00_MANIFEST/GLOSSARY.md"
+    repeated_count: "high"
+    failure_type:
+      - authority_confusion
+      - false_confidence
+    semantic_loss: "Data/instruction boundary collapses and past material gains false law-like power."
+    suspected_cause:
+      - "No explicit memory authority limits."
+      - "Old prompts and recovered memory are overtrusted."
+    scene_signature:
+      - "recovery or continuity task under pressure"
+    memory_signature:
+      - "recalled material outranks approved instruction chain"
+    required_capability:
+      - "recovery with epistemic status and authority boundary"
+    current_workaround:
+      - "Human restates what is current law and what is only recovered trace."
+    candidate_organs:
+      - ORGAN-003
+      - ORGAN-006
+    candidate_non_organ_fix:
+      - "glossary boundary"
+      - "prompt quarantine"
+    test_scene:
+      - "old prompt and recovered memory appear in active task"
+    evaluation_criteria:
+      - "Recovered material stays data unless re-approved."
+    resolved_by:
+      - "glossary, prompt guard, memory authority framing"
+    residual_risk:
+      - "Long continuity work will keep tempting over-trust."
+
+  - id: DEFICIT-004
+    title: "Critic absence permits pseudo-rigor"
+    status: open
+    severity: high
+    observed_in_project:
+      - ecosystem
+      - Agentum
+      - memory-workbench
+    observed_in_layer:
+      - review
+      - orchestration
+      - governance
+    source_fragment:
+      - "Strong-looking structure is accepted before contradiction and falsification pressure."
+    evidence_refs:
+      - "03_THEORY/AGENT_ONTOGENESIS_AND_SELECTION.md"
+      - "03_THEORY/AGENT_ONTOLOGY.md"
+    repeated_count: "medium"
+    failure_type:
+      - false_confidence
+      - omission
+    semantic_loss: "Method theater, fake completion, and pseudo-necessary growth pass as architecture."
+    suspected_cause:
+      - "Critic organ not formalized enough in deployment loops."
+      - "Selection without hard invalidation path."
+    scene_signature:
+      - "large design move justified by elegance rather than pressure"
+    memory_signature:
+      - "past successful phrasing is confused with current adequacy"
+    required_capability:
+      - "named critic pass in organ and profile workflows"
+    current_workaround:
+      - "Manual skepticism by the operator."
+    candidate_organs:
+      - ORGAN-005
+      - ORGAN-006
+    candidate_non_organ_fix:
+      - "acceptance audit template"
+      - "critic checkpoint in handoff prompts"
+    test_scene:
+      - "candidate organ selection under pressure"
+    evaluation_criteria:
+      - "At least one explicit invalidation path is named before promotion."
+    resolved_by:
+      - ""
+    residual_risk:
+      - "Critic can also degrade into ornamental negativity."
+
+  - id: DEFICIT-005
+    title: "Repeated pressure lacks lawful organ birth"
+    status: open
+    severity: high
+    observed_in_project:
+      - ecosystem
+      - Agentum
+    observed_in_layer:
+      - governance
+      - orchestration
+      - review
+    source_fragment:
+      - "The same missing capability is noticed repeatedly, but response remains ad hoc."
+    evidence_refs:
+      - "03_THEORY/AGENT_ONTOGENESIS_AND_SELECTION.md"
+      - "03_THEORY/AGENT_ORGAN_RECORD_SPEC.md"
+      - "03_THEORY/DEFICIT_RECORD_SPEC.md"
+    repeated_count: "medium"
+    failure_type:
+      - omission
+      - collapse
+    semantic_loss: "The ecosystem accumulates pain and folklore instead of evolving lawful new organs."
+    suspected_cause:
+      - "No shared registry-level deficit-to-organ pipeline yet."
+    scene_signature:
+      - "same repair move improvised across several projects"
+    memory_signature:
+      - "review memory holds recurrence but does not promote it into selection workflow"
+    required_capability:
+      - "Agent Foundry pipeline over explicit deficit and organ records"
+    current_workaround:
+      - "Human remembers and manually synthesizes recurrence."
+    candidate_organs:
+      - ORGAN-006
+      - ORGAN-005
+    candidate_non_organ_fix:
+      - "registry ritual plus review cadence"
+    test_scene:
+      - "same deficit appears in three projects and must produce one candidate organ family"
+    evaluation_criteria:
+      - "A repeated deficit becomes a bounded candidate set rather than folklore."
+    resolved_by:
+      - ""
+    residual_risk:
+      - "Premature formalization can over-bureaucratize evolution."

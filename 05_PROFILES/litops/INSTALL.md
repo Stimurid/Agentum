@@ -16,6 +16,16 @@
 - commands
 - runtime docs, especially project identity and memory docs
 
+## Organ set
+
+Install this Litops-aware set:
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-002` Litops Digestion Organ
+- `ORGAN-003` MemoryWorkbench Reconstructive Memory
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
 ## Files not to copy
 
 - `01_RESEARCH_ARCHIVE/**`

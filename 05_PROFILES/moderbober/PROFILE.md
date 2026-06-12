@@ -49,6 +49,22 @@ Profile for ModerBober as a moderation/session product with production-sensitive
 - compound command
 - production contamination
 
+## Active organs
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+## Relevant deficits
+
+- `DEFICIT-001` project bleed and foreign execution
+- `DEFICIT-004` critic absence permits pseudo-rigor
+
+## Organs usually excluded from first install
+
+- `ORGAN-003` full reconstructive memory
+- `ORGAN-004` manuscript field organ
+
 ## Install notes
 
 Start with the smallest non-production slice.

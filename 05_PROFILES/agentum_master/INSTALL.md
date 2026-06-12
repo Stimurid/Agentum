@@ -14,6 +14,14 @@ It describes how the master repository should protect its own internal structure
 4. Update ecosystem registries when central layer structure changes.
 5. Do not treat target-project assumptions as master-repo defaults.
 
+## Governing organ set
+
+The master repository governs primarily through:
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
 ## Validation
 
 Before commit, check:

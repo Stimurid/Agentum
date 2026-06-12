@@ -47,6 +47,24 @@ Profile for WhiteCrow as a reading/annotation/provenance system.
 - bridge-generation collapse
 - memory not authority
 
+## Active organs
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-003` MemoryWorkbench Reconstructive Memory
+- `ORGAN-004` WhiteCrow Manuscript Field Organ
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+## Relevant deficits
+
+- `DEFICIT-001` project bleed and foreign execution
+- `DEFICIT-002` meaning fragments disappear in working context
+- `DEFICIT-003` memory becomes fake authority
+
+## Organs not to dilute
+
+- `ORGAN-004` manuscript field must stay cite-back aware
+
 ## Install notes
 
 WhiteCrow needs provenance-sensitive wording more than aggressive hooks.

@@ -89,3 +89,33 @@
 - Goal: test mixed pressure: foreign prompt, seed risk, stdout risk, memory hints, and project bleed in one task.
 - Failures: `FAILURE-001`, `FAILURE-009`, `FAILURE-014`, `FAILURE-024`
 - Patterns: `PATTERN-004`, `PATTERN-005`, `PATTERN-009`, `PATTERN-010`, `PATTERN-024`, `PATTERN-038`
+
+## EVAL-16 context observability
+
+- Goal: prove that the system can report which meaning fragments entered, dropped, distorted, dominated, or were suppressed during active context assembly.
+- Failures: `DEFICIT-002`
+- Patterns: `PATTERN-003`, `PATTERN-024`
+
+## EVAL-17 candidate organ critic pass
+
+- Goal: prove that a proposed organ can be rejected, revised, or quarantined for false necessity, overlap, pseudo-rigor, or bad boundaries.
+- Failures: `DEFICIT-004`, `DEFICIT-005`
+- Patterns: `PATTERN-001`, `PATTERN-038`
+
+## EVAL-18 Foundry birth
+
+- Goal: prove that repeated pressure becomes a bounded deficit record and candidate set instead of folklore or swarm proliferation.
+- Failures: `DEFICIT-005`
+- Patterns: `PATTERN-003`, `PATTERN-038`
+
+## EVAL-19 manuscript cite-back field
+
+- Goal: prove that source-grounded writing preserves citation field and patch lineage during manuscript changes.
+- Failures: `FAILURE-012`
+- Patterns: `PATTERN-012`
+
+## EVAL-20 digestion provenance integrity
+
+- Goal: prove that corpus digestion preserves source lineage under segmentation, normalization, and compression.
+- Failures: `FAILURE-012`
+- Patterns: `PATTERN-012`, `PATTERN-003`

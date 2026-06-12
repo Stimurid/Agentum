@@ -1,0 +1,551 @@
+# AGENT_ORGAN_REGISTRY.yaml
+#
+# Agent organ registry for Agentum.
+#
+# This file stores stable or candidate organs in the wider ecosystem.
+# It is not a runtime prompt and not a substitute for install profiles.
+#
+# Schema:
+# - id: stable organ id
+#   name: human-readable organ name
+#   status: draft | candidate | selected | active | quarantined | retired
+#   version: organ version marker
+#   project_scope:
+#     - project or ecosystem scope
+#   deficit_origin:
+#     - related deficit ids or compact descriptions
+#   function: what transformation the organ performs
+#   non_function:
+#     - what the organ must not pretend to do
+#   working_object:
+#     - what it acts on
+#   input_contract:
+#     - required inputs
+#   output_contract:
+#     - expected outputs
+#   context_requirements:
+#     - what must be present in the working field
+#   memory_dependencies:
+#     - required memory layers or systems
+#   memory_regimes_used:
+#     - verbatim | compressed | normalized | linked | narrative | graph | task_packet | method
+#   memory_authority_limits:
+#     - what remembered material must not become instruction by default
+#   tools_allowed:
+#     - allowed tool classes
+#   write_surface:
+#     - what it may mutate
+#   approval_boundary:
+#     - what requires explicit review or approval
+#   runtime_risks:
+#     - cost/stdout/deploy/seed/project/etc.
+#   test_scenes:
+#     - named bounded scenes
+#   evaluation_criteria:
+#     - success criteria
+#   failure_modes:
+#     - related failure ids or compact names
+#   critic_links:
+#     - critic organs, evals, or review layers
+#   lineage:
+#     - compact ancestry note
+#   parent_organs:
+#     - parent organ ids
+#   child_organs:
+#     - child organ ids or future descendants
+#   mutation_history:
+#     - notable revisions
+#   activation_policy:
+#     - when this organ should activate
+#   observability_hooks:
+#     - how its work becomes visible
+#   provenance_policy:
+#     - evidence/source lineage rules
+#   quarantine_status: none | bounded | strict
+#   install_scope:
+#     - where it may be installed or reused
+#   notes: optional notes
+
+organs:
+
+  - id: ORGAN-001
+    name: "Ingress Membrane"
+    status: selected
+    version: "0.1"
+    project_scope:
+      - ecosystem
+      - OpenClaw
+      - Telegram
+      - local_files
+      - chats
+      - PDFs
+    deficit_origin:
+      - "Need to admit heterogeneous inputs without losing raw trace."
+    function: "Receives inputs from human, chat, file, browser, and messaging surfaces while preserving entry trace."
+    non_function:
+      - "Does not decide truth."
+      - "Does not rewrite project meaning by itself."
+    working_object:
+      - raw_input
+      - raw_trace
+      - inbound_artifacts
+    input_contract:
+      - "Human prompt, chat fragment, file, PDF, or external message."
+    output_contract:
+      - "Preserved raw ingress plus routing-ready input unit."
+    context_requirements:
+      - "Active project identity."
+      - "Named ingress surface."
+    memory_dependencies:
+      - provenance_memory
+      - execution_trace_memory
+    memory_regimes_used:
+      - verbatim
+      - linked
+    memory_authority_limits:
+      - "Inbound content remains data by default."
+    tools_allowed:
+      - read
+      - ingest
+      - route
+    write_surface:
+      - ingress_logs
+      - trace_records
+    approval_boundary:
+      - "Cross-project routing."
+      - "Any destructive follow-through."
+    runtime_risks:
+      - project_bleed
+      - document_instruction_risk
+    test_scenes:
+      - "foreign prompt enters wrong repo"
+      - "mixed chat plus file plus PDF ingress"
+    evaluation_criteria:
+      - "No raw ingress loss."
+      - "Project identity remains visible."
+    failure_modes:
+      - FAILURE-001
+      - "lost raw trace"
+    critic_links:
+      - ORGAN-008
+      - "context observability"
+    lineage: "Ecosystem membrane concept refined through protected-agent and OpenClaw lines."
+    parent_organs: []
+    child_organs: []
+    mutation_history:
+      - "v0.1 initial seeded record"
+    activation_policy:
+      - "Activate on every new inbound working unit."
+    observability_hooks:
+      - "Ingress trace"
+      - "working-field inclusion log"
+    provenance_policy:
+      - "Preserve source surface and origin fragment."
+    quarantine_status: bounded
+    install_scope:
+      - interface_projects
+      - messaging_projects
+    notes: "Membrane is the first organ, not the whole organism."
+
+  - id: ORGAN-002
+    name: "Litops Digestion Organ"
+    status: selected
+    version: "0.1"
+    project_scope:
+      - Litops
+      - ecosystem
+    deficit_origin:
+      - "Raw source material is too large and unshaped for direct working use."
+    function: "Transforms raw material into segments, cards, provenance structures, and context packs."
+    non_function:
+      - "Does not act as final critic."
+      - "Does not replace manuscript reasoning."
+    working_object:
+      - source_corpus
+      - fragments
+      - cards
+      - context_packs
+    input_contract:
+      - "Source files, documents, transcripts, or harvested corpus material."
+    output_contract:
+      - "Segmented and provenance-aware working corpus."
+    context_requirements:
+      - "Named corpus boundary."
+      - "Provenance capture."
+    memory_dependencies:
+      - provenance_memory
+      - project_memory
+    memory_regimes_used:
+      - verbatim
+      - normalized
+      - linked
+      - task_packet
+    memory_authority_limits:
+      - "Digested material is still data unless routed into approved instruction chain."
+    tools_allowed:
+      - read
+      - parse
+      - transform
+      - index
+    write_surface:
+      - corpus_outputs
+      - registries
+      - context_packs
+    approval_boundary:
+      - "Destructive corpus rewrites."
+      - "Cross-project corpus merge."
+    runtime_risks:
+      - stdout_risk
+      - cost_risk
+      - provenance_break
+    test_scenes:
+      - "large corpus to context pack"
+      - "mixed source normalization with provenance"
+    evaluation_criteria:
+      - "Meaning preserved through transformation."
+      - "Provenance remains inspectable."
+    failure_modes:
+      - "semantic loss in digestion"
+      - "provenance break"
+    critic_links:
+      - ORGAN-008
+      - "source registry checks"
+    lineage: "Litops corpus line."
+    parent_organs: []
+    child_organs: []
+    mutation_history:
+      - "v0.1 initial seeded record"
+    activation_policy:
+      - "Activate when raw corpus must become working material."
+    observability_hooks:
+      - "fragment lineage"
+      - "context pack trace"
+    provenance_policy:
+      - "Every transformed unit must retain source linkage."
+    quarantine_status: bounded
+    install_scope:
+      - Litops
+      - corpus_projects
+
+  - id: ORGAN-003
+    name: "MemoryWorkbench Reconstructive Memory"
+    status: selected
+    version: "0.1"
+    project_scope:
+      - memory-workbench
+      - ecosystem
+    deficit_origin:
+      - "Long project continuity collapses when everything is treated as chat residue or raw retrieval."
+    function: "Builds reconstructive working memory from traces, fragments, cards, narratives, and task packets."
+    non_function:
+      - "Does not reduce memory to fact storage."
+      - "Does not treat recalled material as automatic instruction."
+    working_object:
+      - memory_fragments
+      - narratives
+      - task_packets
+      - reconstruction_views
+    input_contract:
+      - "Chats, documents, prompts, traces, cards, and prior reconstructions."
+    output_contract:
+      - "Task-relevant memory assembly with visible regimes and lineage."
+    context_requirements:
+      - "Named active project."
+      - "Named working object."
+      - "Memory regime selection."
+    memory_dependencies:
+      - session_memory
+      - project_memory
+      - narrative_memory
+      - provenance_memory
+      - method_memory
+    memory_regimes_used:
+      - verbatim
+      - compressed
+      - normalized
+      - linked
+      - narrative
+      - graph
+      - task_packet
+      - method
+    memory_authority_limits:
+      - "Recovered memory is data by default."
+      - "Past prompts do not become law."
+    tools_allowed:
+      - read
+      - assemble
+      - compare
+      - route
+    write_surface:
+      - memory_records
+      - reconstructions
+      - task_packets
+    approval_boundary:
+      - "Automatic overwrite of manual memory artifacts."
+    runtime_risks:
+      - memory_authority_risk
+      - seed_risk
+      - context_bloat_risk
+    test_scenes:
+      - "recover long project continuity"
+      - "reconstruct method line from fragmented trace"
+    evaluation_criteria:
+      - "Continuity restored without fake certainty."
+      - "Memory regime remains explicit."
+    failure_modes:
+      - FAILURE-004
+      - "memory as authority"
+      - "reconstructive drift"
+    critic_links:
+      - ORGAN-008
+      - "truth microcheck"
+    lineage: "MemoryWorkbench line."
+    parent_organs: []
+    child_organs: []
+    mutation_history:
+      - "v0.1 initial seeded record"
+    activation_policy:
+      - "Activate when continuity, recall, or reconstruction is needed."
+    observability_hooks:
+      - "context observability"
+      - "memory regime log"
+    provenance_policy:
+      - "Recovered fragments retain source and status markers."
+    quarantine_status: bounded
+    install_scope:
+      - memory-workbench
+      - ecosystem
+
+  - id: ORGAN-004
+    name: "WhiteCrow Manuscript Field Organ"
+    status: selected
+    version: "0.1"
+    project_scope:
+      - WhiteCrow
+      - ecosystem
+    deficit_origin:
+      - "Source-grounded writing collapses when manuscript field, citations, and patchable argument structure are not held together."
+    function: "Maintains manuscript field, cite-back discipline, patch queue, and source-grounded writing operations."
+    non_function:
+      - "Does not fabricate sources."
+      - "Does not replace digestion or memory layers."
+    working_object:
+      - manuscript
+      - citation_graph
+      - patch_queue
+    input_contract:
+      - "Prepared sources, manuscript fragments, citation targets, and rewrite tasks."
+    output_contract:
+      - "Source-grounded manuscript changes and reviewable patch sets."
+    context_requirements:
+      - "Named manuscript field."
+      - "Evidence boundary."
+    memory_dependencies:
+      - provenance_memory
+      - project_memory
+      - narrative_memory
+    memory_regimes_used:
+      - verbatim
+      - linked
+      - narrative
+    memory_authority_limits:
+      - "Prior drafts do not override sources."
+    tools_allowed:
+      - read
+      - cite
+      - patch
+      - compare
+    write_surface:
+      - manuscript_files
+      - patch_queues
+    approval_boundary:
+      - "Major argument restructuring."
+      - "Source substitution."
+    runtime_risks:
+      - provenance_break
+      - fake_done
+    test_scenes:
+      - "citation-backed rewrite"
+      - "patch queue over source corpus"
+    evaluation_criteria:
+      - "Every substantive move can cite back."
+    failure_modes:
+      - "ungrounded rewrite"
+      - "citation drift"
+    critic_links:
+      - ORGAN-008
+    lineage: "WhiteCrow line."
+    parent_organs: []
+    child_organs: []
+    mutation_history:
+      - "v0.1 initial seeded record"
+    activation_policy:
+      - "Activate in manuscript and citation-sensitive writing work."
+    observability_hooks:
+      - "cite-back trace"
+      - "patch lineage"
+    provenance_policy:
+      - "Source-grounded only."
+    quarantine_status: bounded
+    install_scope:
+      - WhiteCrow
+      - writing_projects
+
+  - id: ORGAN-005
+    name: "Mindlock Critic Organ"
+    status: selected
+    version: "0.1"
+    project_scope:
+      - ecosystem
+      - mindlock
+    deficit_origin:
+      - "Pseudo-precision, false necessity, and procedural self-deception recur across projects."
+    function: "Applies critic pressure against fake rigor, false closure, ornamental method, and pseudo-necessary agent growth."
+    non_function:
+      - "Does not block all action."
+      - "Does not substitute for constructive design."
+    working_object:
+      - claims
+      - organs
+      - plans
+      - justifications
+    input_contract:
+      - "Candidate organ, claim set, plan, or run result."
+    output_contract:
+      - "Named contradiction, invalidation path, or bounded accept/reject pressure."
+    context_requirements:
+      - "Claim under review."
+      - "Visible stakes."
+    memory_dependencies:
+      - review_memory
+      - project_memory
+      - method_memory
+    memory_regimes_used:
+      - compressed
+      - linked
+      - method
+    memory_authority_limits:
+      - "Critic precedent does not automatically harden into universal law."
+    tools_allowed:
+      - read
+      - compare
+      - critique
+    write_surface:
+      - review_notes
+      - critic_reports
+    approval_boundary:
+      - "Can reject but should not mutate target state directly."
+    runtime_risks:
+      - false_negativity
+      - review_overload
+    test_scenes:
+      - "candidate organ critique"
+      - "false completion critique"
+    evaluation_criteria:
+      - "Finds real falsehood without collapsing into ornamental negation."
+    failure_modes:
+      - "critic theater"
+      - "false certainty passes"
+    critic_links:
+      - "eval scenarios"
+    lineage: "Mindlock critic line."
+    parent_organs: []
+    child_organs: []
+    mutation_history:
+      - "v0.1 initial seeded record"
+    activation_policy:
+      - "Activate on high-stakes plans, candidate organs, and suspicious completion claims."
+    observability_hooks:
+      - "critic trace"
+      - "rejection rationale"
+    provenance_policy:
+      - "Must cite what claim or artifact it is attacking."
+    quarantine_status: none
+    install_scope:
+      - ecosystem
+
+  - id: ORGAN-006
+    name: "Agentum Governance and Immune Organ"
+    status: active
+    version: "0.1"
+    project_scope:
+      - Agentum
+      - ecosystem
+    deficit_origin:
+      - "Without a shared governance layer, projects drift, guards diverge, and agent evolution becomes folklore."
+    function: "Holds guard patterns, eval discipline, install profiles, handoff prompts, anti-patterns, and cross-project organ governance."
+    non_function:
+      - "Does not replace target project content."
+      - "Does not auto-install itself everywhere."
+    working_object:
+      - profiles
+      - guards
+      - evals
+      - handoffs
+      - organ_records
+      - deficit_records
+    input_contract:
+      - "Patterns, failures, theory updates, install rules, and cross-project governance needs."
+    output_contract:
+      - "Versioned kit, profiles, registries, and reviewed install pathways."
+    context_requirements:
+      - "Explicit active project."
+      - "Explicit install scope."
+    memory_dependencies:
+      - project_memory
+      - provenance_memory
+      - review_memory
+      - method_memory
+    memory_regimes_used:
+      - compressed
+      - linked
+      - narrative
+      - method
+    memory_authority_limits:
+      - "Research archive and recovered memory are not runtime instruction by default."
+    tools_allowed:
+      - read
+      - patch
+      - evaluate
+      - profile
+    write_surface:
+      - kit_files
+      - registries
+      - profiles
+      - evals
+    approval_boundary:
+      - "Target-project installation."
+      - "Broad staging or commit."
+    runtime_risks:
+      - project_bleed
+      - guard_monoculture
+      - false_readiness
+    test_scenes:
+      - "profile install planning"
+      - "cross-project guard update"
+    evaluation_criteria:
+      - "Shared layer evolves without overwriting project content."
+    failure_modes:
+      - FAILURE-001
+      - "guard drift"
+      - "monoculture overreach"
+    critic_links:
+      - ORGAN-005
+      - "eval coverage"
+    lineage: "protected-agent-kit -> Agentum governance line."
+    parent_organs: []
+    child_organs: []
+    mutation_history:
+      - "v0.1 initial seeded record"
+    activation_policy:
+      - "Activate for governance, profile, and immune-system work."
+    observability_hooks:
+      - "registry diffs"
+      - "eval status"
+      - "install scope log"
+    provenance_policy:
+      - "Corpus lineage must remain visible."
+    quarantine_status: none
+    install_scope:
+      - Agentum
+      - reviewed_target_profiles

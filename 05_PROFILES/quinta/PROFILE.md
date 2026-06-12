@@ -47,6 +47,24 @@ Profile for Quinta as invention/workbench/persona/product space.
 - project bleed
 - persona/guard separation
 
+## Active organs
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-003` MemoryWorkbench Reconstructive Memory
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+## Relevant deficits
+
+- `DEFICIT-001` project bleed and foreign execution
+- `DEFICIT-003` memory becomes fake authority
+- `DEFICIT-004` critic absence permits pseudo-rigor
+
+## Style-layer boundary
+
+- persona fragments may enrich project agents
+- persona fragments must not replace dry guard organs
+
 ## Install notes
 
 Quinta is the profile where persona/style layering matters most, but guard and persona must remain distinct.

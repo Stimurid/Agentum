@@ -33,3 +33,21 @@ This profile may evolve the framework itself, but it must not confuse framework 
 - subject layer vs runtime layer;
 - central ontology vs local divergence;
 - ecosystem sync vs target-project content work.
+
+## Active organs
+
+- `ORGAN-001` Ingress Membrane
+- `ORGAN-005` Mindlock Critic Organ
+- `ORGAN-006` Agentum Governance and Immune Organ
+
+## Governing records
+
+- `AGENT_ORGAN_REGISTRY.yaml`
+- `DEFICIT_REGISTRY.yaml`
+- `ORGAN_DEFICIT_EVAL_MATRIX.md`
+
+## Primary deficits
+
+- `DEFICIT-001` project bleed and foreign execution
+- `DEFICIT-004` critic absence permits pseudo-rigor
+- `DEFICIT-005` repeated pressure lacks lawful organ birth

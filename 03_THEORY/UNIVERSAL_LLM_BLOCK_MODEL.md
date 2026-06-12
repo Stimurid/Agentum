@@ -45,9 +45,41 @@ into:
 - a traceable output
 - an observable cost/risk event
 
+The stronger ecosystem reading is:
+
+the LLM block is one organ system inside a larger cognitive organism.
+
+It works together with:
+
+- memory substrate;
+- prompt and agent library;
+- critic layers;
+- orchestration surfaces;
+- project-specific organs.
+
+It is therefore not only a provider/router stack.
+
+It is also where:
+
+- a scene is assembled;
+- memory is selected and reconstructed;
+- agents are placed into relation;
+- traceability and rollback remain possible after synthesis.
+
 ## Universal block structure
 
 Every serious project should be describable through these eleven surfaces.
+
+These surfaces can also be read as an organism stack:
+
+1. membrane;
+2. digestion;
+3. memory;
+4. assembly;
+5. critique;
+6. synthesis;
+7. orchestration;
+8. governance.
 
 ### 1. Identity surface
 
@@ -71,6 +103,17 @@ Answers:
 - whether it is direct execution or needs preflight
 
 This is where the risk vector begins.
+
+But it is also where active context assembly begins.
+
+The system should not only classify the user ask.
+
+It should start answering:
+
+- what must enter the working field now;
+- what should stay outside;
+- what is likely to overload or derail the run;
+- what memory regime this task actually needs.
 
 ### 3. Runtime mode surface
 
@@ -178,6 +221,43 @@ Important:
 - persona layer must stay separable from runtime guard layer
 - broad prompt must not directly rewrite prompt assets
 
+The stronger version of this surface is not "assemble one prompt."
+
+It is "assemble a working organ inside an active scene."
+
+### 6.1. Prompt macroforms
+
+The ecosystem already shows that prompt bodies are not only "long text."
+
+Some of them behave as repeatable macroforms for assembling a working agent.
+
+Useful observed macroforms include:
+
+- seven-part forms
+- eight-part forms
+
+These are not sacred fixed numerologies.
+
+They are compact assembly scaffolds that help keep an agent operationally complete.
+
+Typical sections that recur across these forms are:
+
+1. role / purpose / status
+2. anti-role or forbidden modes
+3. positive function
+4. operational definitions
+5. analysis dimensions or evaluation axes
+6. autonomy and boundary rules
+7. output format and reporting mode
+8. memory / self-check / versioning
+
+Implication:
+
+- Agentum should treat such forms as reusable prompt skeletons
+- but should not hard-code one mandatory count for every project
+- the invariant is not "seven" or "eight"
+- the invariant is coverage of role, boundary, method, memory, and output discipline
+
 ### 7. Evidence and retrieval surface
 
 The LLM block must distinguish between:
@@ -204,6 +284,35 @@ Examples:
 - ModerBober leans toward fragment/provenance/full-text shape
 - Kairoskopion leans toward evidence/external-adapter/publication shape
 - Quinta may use knowledge corpus without full RAG centrality
+
+This surface must also answer a stronger memory question:
+
+retrieval is not the same thing as memory.
+
+Retrieval fetches candidate material.
+
+Memory decides what kind of past is being reconstructed for the active task.
+
+So the block should distinguish at least these memory regimes:
+
+- factual recall;
+- provenance recall;
+- project continuity recall;
+- role or stylistic recall;
+- review or critic recall;
+- scene-memory recall;
+- suppressed or quarantined memory that must not silently return as authority.
+
+The practical memory stack emerging across this ecosystem is:
+
+- verbatim memory
+- compressed memory
+- normalized memory
+- linked memory
+- narrative memory
+- graph or relation memory
+- task-packet memory
+- method memory
 
 ### 8. Tool execution surface
 
@@ -271,6 +380,34 @@ Minimum observability objects:
 - evidence set reference
 - tool trace
 - status result
+
+The stronger version required by this ecosystem is not only trace observability.
+
+It is also context observability:
+
+- which fragments entered the working field;
+- which fragments were excluded;
+- which attractors dominated the run;
+- where interference between lines started;
+- what compressed memory replaced verbatim evidence.
+
+This should be understood not merely as debugging.
+
+It is visibility of the fate of meaning fragments inside the run:
+
+- used
+- dropped
+- distorted
+- became dominant
+- got suppressed
+- generated a new candidate organ
+
+For stronger scene-aware orchestration, observability should also include:
+
+- what scene core or working object was active;
+- what positions or agents entered the scene;
+- what unresolved glyphs or ambiguities were carried forward;
+- what outer environment or evidence shell bounded the run.
 
 ### 11. Output and rollback surface
 
@@ -388,6 +525,41 @@ Typical projects:
 
 - Paideia for now
 
+### Shape F — diagnostic or pedagogical analysis agent
+
+Used when:
+
+- the agent evaluates structured traces of work
+- the output must stay analytic rather than assistive
+- memory, versioning, and self-check are first-class
+- the result must remain comparable across participants, sessions, or iterations
+
+Typical donors:
+
+- seven-part and eight-part diagnostic prompt forms
+- educational analysis materials
+- MemoryWorkbench-style review and memory routing logic
+
+### Shape G — cognitive organism workbench
+
+Used when:
+
+- multiple specialized organs cooperate across one ecology;
+- memory is reconstructive rather than merely persistent;
+- prompt bodies, modules, and roles are treated as versioned working objects;
+- the system may later generate new organs from recurring deficits.
+
+Typical local contour:
+
+- Litops;
+- MemoryWorkbench;
+- WhiteCrow;
+- Kairoskopion;
+- ModerBober;
+- Quinta;
+- Mindlock;
+- Agentum.
+
 ## Universal model families by project need
 
 The LLM block should not pretend one model family fits every task.
@@ -502,6 +674,40 @@ Needs:
 - then provider vocabulary
 - then corpus-to-runtime translation
 
+It is also a likely donor of pedagogical and orchestration prompt forms rather than only a future target repo.
+
+## Orchestration principle
+
+The universal LLM block should not treat orchestration as mere command-and-control.
+
+A stronger working definition is:
+
+orchestration = organization of interaction among semi-autonomous agents, spaces, and representations so that they can enter productive relation without collapsing into one rigid command chain
+
+This means:
+
+- not every agent is centrally scripted
+- not every interaction is free swarm chaos
+- the system needs interfaces, screens, bundles, and shared objects that let agents "see" one another
+- coordination can be achieved through common spaces, common artifacts, and mutual visibility, not only through top-down dispatch
+
+It also means the block should be able to host a working scene, not only a queue.
+
+A serious run may need:
+
+- a scene core;
+- a bounded goal structure;
+- a visible subject-object crossing;
+- an outer evidence environment;
+- a mnemonic shell that preserves what the scene has already become.
+
+This distinction matters especially for:
+
+- multi-agent moderation
+- university-orchestration concepts
+- subject-bearing agent ecologies
+- future agent-generation and agent-selection layers
+
 ## Canonical config skeleton
 
 Every project should be able to map its LLM block into a compact config skeleton like this:
@@ -527,6 +733,65 @@ rollback_class
 This is not a demand for one literal file format.
 
 It is the minimum conceptual schema that lets Agentum compare different repos without flattening them.
+
+## Canonical organism objects
+
+The ecosystem is now converging on two central cross-project objects.
+
+### AgentOrgan
+
+This is the stable record of an operational organ.
+
+Minimum fields:
+
+```text
+id
+name
+project_scope
+deficit_origin
+function
+input_contract
+output_contract
+memory_dependencies
+context_requirements
+tools_allowed
+test_scenes
+evaluation_criteria
+failure_modes
+lineage
+parent_organs
+child_organs
+mutation_history
+activation_policy
+observability_hooks
+provenance_policy
+quarantine_status
+```
+
+### Deficit
+
+This is the stable record of recurrent project pressure that may require a new organ.
+
+Minimum fields:
+
+```text
+id
+observed_in_project
+source_fragment
+failure_type
+semantic_loss
+repeated_count
+suspected_cause
+required_capability
+candidate_organs
+test_scene
+resolved_by
+unresolved_status
+```
+
+These are not yet mandatory file formats.
+
+They are the clearest current schema for turning this ecosystem from prompt folklore into organ-level engineering.
 
 ## What must not happen
 
@@ -565,3 +830,7 @@ while still sharing one operational language for:
 - rollback
 
 That is the right level of unification for the current ecosystem.
+
+The more exact current formula is:
+
+Agentum is becoming the governance and evolution library for a multi-project cognitive organism, not only a protected-agent runtime kit.
