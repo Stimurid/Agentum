@@ -1,6 +1,6 @@
 ﻿# SOURCE_REGISTRY.yaml
 #
-# Source registry for protected-agent-kit.
+# Source registry for Agentum.
 #
 # This file preserves the research body behind the kit.
 # It is not a runtime prompt and should not be copied wholesale into target projects.
@@ -1521,7 +1521,7 @@ sources:
     url: ""
     wave: 8
     level: architecture_guard
-    key_use: "Decision to create standalone protected-agent-kit repository."
+    key_use: "Decision to create standalone Agentum repository."
     take:
       - "Separate canonical kit repository from target projects."
     do_not_copy:

@@ -16,6 +16,6 @@ Use vendor-folder install when the target repo should own a local copy of the ki
 ## Rules
 
 - vendor only compact runtime files
-- record source commit of `protected-agent-kit`
+- record source commit of `Agentum`
 - rerun proving-ground after copy
 - never vendor the full research archive

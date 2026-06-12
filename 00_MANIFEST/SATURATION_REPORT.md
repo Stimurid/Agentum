@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This report records the current saturation state of the protected-agent-kit bootstrap corpus.
+This report records the current saturation state of the Agentum bootstrap corpus.
 
 Saturation here does not mean "nothing new can ever be learned."
 It means the preserved material is now sufficient to stop relying only on chat memory and to begin the next bounded phase: v0 kit construction.

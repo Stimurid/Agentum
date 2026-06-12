@@ -1,6 +1,6 @@
 ﻿# FAILURE_MODE_REGISTRY.yaml
 #
-# Failure mode registry for protected-agent-kit.
+# Failure mode registry for Agentum.
 #
 # This file stores the concrete failures the kit must prevent, detect, or route.
 # It is the bridge between research and eval scenarios.

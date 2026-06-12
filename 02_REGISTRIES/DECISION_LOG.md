@@ -1,15 +1,15 @@
 ﻿# DECISION_LOG
 
-This file records architectural decisions for protected-agent-kit.
+This file records architectural decisions for Agentum.
 
 ## DECISION-001 — Create a standalone repository
 
 Status: accepted
 
 Decision:
-Create protected-agent-kit as a standalone repository at:
+Create Agentum as a standalone repository at:
 
-C:\projects\protected-agent-kit
+C:\projects\Agentum
 
 Rationale:
 The research and guard architecture must not live only in a chat or inside one target project.
@@ -19,7 +19,7 @@ If stored inside ModerBober, it inherits production and secrets risk.
 If stored only in ChatGPT memory, it can be lost, distorted, or unavailable.
 
 Consequences:
-protected-agent-kit becomes the canonical source for research, registries, patterns, failure modes, v0 kits, install profiles, and handoff prompts.
+Agentum becomes the canonical source for research, registries, patterns, failure modes, v0 kits, install profiles, and handoff prompts.
 
 Target projects receive selected install profiles, not the whole research archive.
 
@@ -80,7 +80,7 @@ Subagents, MCPs, skills, and advanced orchestration are postponed to v1.
 Status: accepted
 
 Decision:
-The first intended install target after protected-agent-kit exists is Litops.
+The first intended install target after Agentum exists is Litops.
 
 Rationale:
 Litops already has prompt-body logic, registry logic, semantic resolution, protected seed work, memory/provenance concerns, and agentic corpus preparation.
@@ -160,7 +160,7 @@ safe-batch must define task cluster, non-goals, max touched files, protected see
 Status: accepted
 
 Decision:
-Do not hand off implementation to Claude/Codex until the protected-agent-kit repository exists and the research/pattern/failure registries have been backfilled.
+Do not hand off implementation to Claude/Codex until the Agentum repository exists and the research/pattern/failure registries have been backfilled.
 
 Rationale:
 A handoff prompt alone would recreate the problem: it would ask an agent to act without preserving the research body that justified the action.

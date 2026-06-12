@@ -1,6 +1,6 @@
 # ANTI_PATTERNS
 
-Human-readable registry of behaviors, formulations, and shortcuts that protected-agent-kit must not normalize.
+Human-readable registry of behaviors, formulations, and shortcuts that Agentum must not normalize.
 
 This file is not a runtime prompt to paste wholesale into target projects.
 It is a design and review artifact for detecting what not to copy into v0 kits, install profiles, evals, and handoff prompts.
@@ -483,4 +483,4 @@ confident text
 -> budget burn
 -> false completion
 
-protected-agent-kit exists to break that chain early, explicitly, and repeatably.
+Agentum exists to break that chain early, explicitly, and repeatably.

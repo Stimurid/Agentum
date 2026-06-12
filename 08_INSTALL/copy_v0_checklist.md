@@ -25,4 +25,4 @@ Use this checklist before copying `v0_minimal` into any target repo.
 
 ## Human review
 
-No automatic install from `protected-agent-kit` without human review.
+No automatic install from `Agentum` without human review.

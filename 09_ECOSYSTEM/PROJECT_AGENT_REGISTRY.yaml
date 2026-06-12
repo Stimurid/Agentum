@@ -1,0 +1,76 @@
+version: "0.1"
+description: >
+  Registry of known repositories and the agent-layer contour intended or installed
+  for each one. This tracks only the agent-evolution surface, not full product state.
+
+projects:
+  - project_id: Agentum
+    root_path: C:\projects\Agentum
+    role: master_library
+    profile: agentum_master
+    status: canonical
+    installed_layers:
+      runtime_guard: v0_minimal@0.1
+      subject_ecology: draft@0.1
+      persona_fragments: anti_idolatry_humor@0.1
+    ontology_authority: central
+    divergence_status: none
+    notes: >
+      Canonical source of the integrated framework. Holds corpus, theory,
+      install kits, profiles, evals, and ecosystem registries.
+
+  - project_id: litops
+    root_path_hint: unresolved_in_this_registry_pass
+    role: target_project
+    profile: litops
+    status: planned_sync
+    installed_layers:
+      runtime_guard: planned
+      subject_ecology: planned
+      persona_fragments: undecided
+    ontology_authority: central_with_local_review
+    divergence_status: unknown
+    notes: >
+      High-priority target for guarded runtime layer plus subject-bearing agent contour.
+
+  - project_id: moderbober
+    root_path_hint: unresolved_in_this_registry_pass
+    role: target_project
+    profile: moderbober
+    status: planned_sync
+    installed_layers:
+      runtime_guard: planned
+      subject_ecology: selective
+      persona_fragments: selective
+    ontology_authority: central_with_local_review
+    divergence_status: unknown
+    notes: >
+      Runtime-heavy target; subject layer should stay bounded and role-specific.
+
+  - project_id: whitecrow
+    root_path_hint: unresolved_in_this_registry_pass
+    role: target_project
+    profile: whitecrow
+    status: planned_sync
+    installed_layers:
+      runtime_guard: planned
+      subject_ecology: planned
+      persona_fragments: selective
+    ontology_authority: central_with_local_review
+    divergence_status: expected
+    notes: >
+      Project likely to need the richest ontology layer, but still under bounded install discipline.
+
+  - project_id: quinta
+    root_path_hint: unresolved_in_this_registry_pass
+    role: target_project
+    profile: quinta
+    status: planned_sync
+    installed_layers:
+      runtime_guard: planned
+      subject_ecology: planned
+      persona_fragments: planned
+    ontology_authority: central_with_local_review
+    divergence_status: unknown
+    notes: >
+      Candidate for stronger persona and invention layers while preserving dry guard boundaries.

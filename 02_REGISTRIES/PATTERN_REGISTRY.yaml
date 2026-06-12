@@ -1,6 +1,6 @@
 ﻿# PATTERN_REGISTRY.yaml
 #
-# Pattern registry for protected-agent-kit.
+# Pattern registry for Agentum.
 #
 # This file stores extracted patterns, not sources.
 # Sources are referenced by ids from SOURCE_REGISTRY.yaml.
@@ -16,7 +16,7 @@
 #   adaptation:
 #     claude_code: how to adapt for Claude Code
 #     codex: how to adapt for Codex
-#     project: how to adapt for protected-agent-kit / target repos
+#     project: how to adapt for Agentum / target repos
 #   risks:
 #     - risk of wrong application
 #   status: must_use | maybe_use | test_needed | reject
@@ -1043,7 +1043,7 @@ patterns:
     adaptation:
       claude_code: "No target install until registry backfill exists."
       codex: "No implementation handoff without source/pattern/failure registries."
-      project: "protected-agent-kit is canonical source."
+      project: "Agentum is canonical source."
     risks:
       - "May defer useful install too long."
     status: must_use

@@ -1,6 +1,6 @@
 # GLOSSARY
 
-Core terms for protected-agent-kit.
+Core terms for Agentum.
 
 The purpose of this glossary is to keep the repository vocabulary stable across manifests, registries, v0 kit files, install profiles, eval scenarios, and handoff prompts.
 
@@ -30,7 +30,7 @@ This includes tokens, context window, API credits, tool calls, subprocesses, ret
 ### CLAUDE.md
 
 A repository or profile instruction file intended for Claude-oriented agent runtimes.
-Within protected-agent-kit it is treated similarly to AGENTS.md: influential context, potentially authoritative when inside the approved instruction chain, but not a hard runtime guard by itself.
+Within Agentum it is treated similarly to AGENTS.md: influential context, potentially authoritative when inside the approved instruction chain, but not a hard runtime guard by itself.
 
 ### context-only instruction
 

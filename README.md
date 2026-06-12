@@ -1,138 +1,86 @@
-# protected-agent-kit
+# Agentum
 
-`protected-agent-kit` — локальный standalone repository для защищённой работы с coding agents и persona agents.
+`Agentum` is the master repository for a unified agent framework.
 
-Это не target application repo и не runtime prompt dump. Репозиторий хранит корпус, guard kit, persona fragments, install profiles, evals и handoff prompts так, чтобы ими можно было пользоваться осознанно, а не тащить весь архив в живой runtime.
+It combines:
 
-## Зачем нужен этот repo
+- runtime protection and governance;
+- agent ontology and subjectivity;
+- installable subject-ecology layers;
+- persona fragments;
+- ecosystem registries;
+- target-project profiles and handoff prompts.
 
-Он нужен, чтобы защитная архитектура агента не жила только:
+This is not a target application repo and not a prompt dump.
 
-- в чате;
-- в памяти модели;
-- в одном конкретном проекте;
-- в случайной подборке красивых prompt fragments.
+It is the place where the framework itself is designed, versioned, audited, installed from, and updated across projects.
 
-`protected-agent-kit` отделяет:
+## What Agentum is for
 
-- corpus и registries;
-- теоретические модели;
-- минимальный runtime kit;
-- persona style fragments;
-- target profiles;
-- install docs;
-- eval/proving-ground;
-- handoff prompts.
+Agentum exists so that agent architecture does not live only:
 
-## Текущие контрольные точки
+- in a chat;
+- in model memory;
+- in one local project;
+- in scattered prompt fragments;
+- in one ontology archive without install discipline;
+- in one guard kit without subjectivity.
 
-- `deae7f6` — bootstrap protected-agent-kit corpus
-- `8a25c96` — add v0 minimal protected-agent kit
-- `4472301` — add persona anti-idolatry humor fragments
+Agentum keeps both vertical layers together:
 
-## Слои репозитория
+- **runtime layer** — risk routing, prompt quarantine, safe-batch, recovery, project identity, budget/stdout discipline;
+- **subject layer** — constitution, role ecology, lineage, mutation logic, persona morphology, ecosystem placement.
 
-### `00_MANIFEST`
+## What this repository contains
 
-Project charter, design principles, glossary, saturation и final acceptance report.
+- `00_MANIFEST` — charter, design principles, glossary, saturation, scope;
+- `01_RESEARCH_ARCHIVE` — compact internal synthesis archive;
+- `02_REGISTRIES` — source, pattern, failure, formulations, anti-patterns, decisions;
+- `03_THEORY` — operational theory and ontology docs;
+- `04_KITS/v0_minimal` — minimal runtime guard kit;
+- `04_KITS/subject_ecology` — installable upper layer for agent constitution and lineage;
+- `04_KITS/persona_fragments` — persona/style fragments;
+- `05_PROFILES` — project-specific install profiles;
+- `06_EVALS` — proving-ground and test prompts;
+- `07_HANDOFF_PROMPTS` — paste-ready operator prompts;
+- `08_INSTALL` — install models and checklists;
+- `09_ECOSYSTEM` — project registry, layer registry, sync protocols.
 
-### `01_RESEARCH_ARCHIVE`
+## Recursive rule
 
-Волны внутреннего synthesis archive. Это не новые web-sources и не runtime instructions. Это компактная фиксация исследовательских фаз, из которых собирался kit.
+Agentum is not only a library for other repositories.
 
-### `02_REGISTRIES`
+It must also apply its own standards to itself.
 
-Source registry, pattern registry, failure-mode registry, golden formulations, anti-patterns, decision log.
+That means:
 
-### `03_THEORY`
+- root `AGENTS.md`, `CLAUDE.md`, and `README.md` must be framework-quality;
+- generic boilerplate should be replaced with Agentum-grade files;
+- the repo should know which of its own layers are canonical;
+- the repo should be ready for a fresh Codex or Claude session to enter and continue work without folklore.
 
-Короткие operational theory docs: context-only vs runtime guard, runtime supply chain, memory surface, executable influence, glyphcrack, safety as distinction, Assuna/MG translation.
+## Current target shape
 
-### `04_KITS/v0_minimal`
+Agentum should become:
 
-Минимальный runtime-readable guard kit:
-
-- compact `AGENTS.md`
-- compact `CLAUDE.md`
-- template `settings.json`
-- hook skeletons
-- command markdowns
-- compact runtime docs
-
-Это минимальный runtime kit, а не вся теория.
-
-### `04_KITS/persona_fragments`
-
-Отдельный style layer для persona agents. Сейчас здесь есть anti-idolatry humor fragments. Этот слой не должен попадать в dry guard/runtime enforcement prompts.
-
-### `05_PROFILES`
-
-Project-specific profiles и install guides:
-
-- `generic_repo`
-- `litops`
-- `moderbober`
-- `whitecrow`
-- `quinta`
-
-### `06_EVALS`
-
-Manual proving-ground:
-
-- eval scenarios
-- dynamic eval seeds
-- test prompts
-- runbook
-- results template
-
-### `07_HANDOFF_PROMPTS`
-
-Русскоязычные paste-ready prompts для создания repo, backfill, environment audit, target install и persona humor patching.
-
-### `08_INSTALL`
-
-Copy/vendor/submodule tradeoffs, Claude Code profile, Codex profile и copy checklist.
+- the canonical ontology source;
+- the canonical runtime-guard source;
+- the canonical install/update authority;
+- the canonical ecosystem registry for which agent layers are used in which repositories.
 
 ## Safe usage
 
-Рабочий порядок:
+1. Read `AGENTS.md`.
+2. Read `CLAUDE.md`.
+3. Read `START_HERE_AGENTUM.md`.
+4. Read the relevant layer docs before editing.
+5. Keep changes bounded to the active layer.
+6. Validate before commit.
 
-1. Прочитать `00_MANIFEST` и `02_REGISTRIES`.
-2. Выбрать target profile.
-3. Понять, нужен ли `v0_minimal` или persona/style layer.
-4. Копировать только компактный профильный slice.
-5. Прогнать local eval/proving-ground.
-6. Делать target install только после human review.
+## Current naming note
 
-## Как не использовать kit
+The internal project name is already `Agentum`.
 
-Не надо:
+If the physical root folder is still `C:\projects\protected-agent-kit`, that is only a temporary filesystem lag caused by the current session lock. The intended canonical path is:
 
-- копировать весь research archive в runtime files target repo;
-- ставить persona humor в dry guard prompts;
-- трактовать `AGENTS.md`/`CLAUDE.md` как hard enforcement;
-- автоматически устанавливать kit в Litops, ModerBober, WhiteCrow, Quinta или любой другой repo прямо из этого repository;
-- переписывать registries ради красоты;
-- считать "создан файл" эквивалентом "продукт готов".
-
-## Как начать с generic profile
-
-Если target repo обычный, начни с:
-
-- `05_PROFILES/generic_repo/PROFILE.md`
-- `05_PROFILES/generic_repo/INSTALL.md`
-- `08_INSTALL/copy_v0_checklist.md`
-- `08_INSTALL/claude_code_profile.md` или `08_INSTALL/codex_profile.md`
-
-## Как адаптировать под Litops / ModerBober / WhiteCrow / Quinta
-
-Используй только соответствующий профиль:
-
-- Litops: защищай source/occurrence/drop/workset/registry/trace/prompt-body distinctions.
-- ModerBober: защищай production/runtime/provider/reporting/UI surfaces.
-- WhiteCrow: защищай source PDFs, annotations, cite-back, metadata, vault projection.
-- Quinta: защищай invention/workbench/persona layers и не смешивай persona humor с dry runtime guard.
-
-## Что дальше
-
-Следующий безопасный шаг после этого repo — first real target-profile installation with human review, starting from one chosen profile and the proving-ground.
+`C:\projects\Agentum`

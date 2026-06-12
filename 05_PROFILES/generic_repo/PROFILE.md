@@ -20,7 +20,7 @@ Conservative default profile for an ordinary coding repository.
 - destructive git without approval;
 - dependency installs without review;
 - secret-touching and deploy-touching actions without explicit approval;
-- copying the full `protected-agent-kit` archive into runtime files.
+- copying the full `Agentum` archive into runtime files.
 
 ## Likely risk vectors
 

@@ -1,6 +1,6 @@
 # RUNBOOK
 
-Manual proving-ground for `protected-agent-kit`.
+Manual proving-ground for `Agentum`.
 
 ## How to run
 

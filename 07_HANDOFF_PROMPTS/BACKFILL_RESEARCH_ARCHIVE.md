@@ -1,6 +1,6 @@
 # BACKFILL_RESEARCH_ARCHIVE
 
-Ты работаешь внутри `protected-agent-kit`.
+Ты работаешь внутри `Agentum`.
 
 Задача: закрыть placeholder-файлы в `01_RESEARCH_ARCHIVE` и `03_THEORY` как internal synthesis archive.
 

@@ -29,7 +29,7 @@ Preview destination files and list which WhiteCrow surfaces stay untouched.
 
 ## Approval gate
 
-No automatic install from `protected-agent-kit` without human review.
+No automatic install from `Agentum` without human review.
 
 ## Rollback plan
 

@@ -30,7 +30,7 @@ Preview every destination path and guard surface.
 
 ## Approval gate
 
-No install from `protected-agent-kit` without human review. No production/deploy touch by default.
+No install from `Agentum` without human review. No production/deploy touch by default.
 
 ## Rollback plan
 

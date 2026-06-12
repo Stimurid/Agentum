@@ -6,7 +6,7 @@ Key takeaways:
 
 - copy, vendor-folder, and submodule installs have different coupling tradeoffs;
 - environment capability audit should come before any target install;
-- target install must never be automatic from `protected-agent-kit` without human review.
+- target install must never be automatic from `Agentum` without human review.
 
 What this wave contributed:
 

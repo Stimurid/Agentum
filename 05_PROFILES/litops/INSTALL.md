@@ -32,7 +32,7 @@ Show planned insertion points in Litops before copying.
 
 ## Approval gate
 
-No automatic install from `protected-agent-kit` without human review.
+No automatic install from `Agentum` without human review.
 
 ## Rollback plan
 

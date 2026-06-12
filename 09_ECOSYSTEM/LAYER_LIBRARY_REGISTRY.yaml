@@ -1,0 +1,49 @@
+version: "0.1"
+description: >
+  Central registry of installable layers maintained in Agentum.
+
+layers:
+  - layer_id: runtime_guard_v0_minimal
+    family: runtime_guard
+    version: "0.1"
+    source_path: 04_KITS/v0_minimal
+    install_scope: target_project_runtime
+    authority: central
+    required_for:
+      - guarded_coding_agents
+      - bounded_tool_use
+      - project_identity_checks
+    must_not_touch:
+      - domain_content
+      - product_logic
+      - manual_seed_work
+
+  - layer_id: subject_ecology_minimal
+    family: subject_ecology
+    version: "0.1"
+    source_path: 04_KITS/subject_ecology
+    install_scope: target_project_agent_contour
+    authority: central
+    required_for:
+      - subject_bearing_agents
+      - lineage_aware_agents
+      - constitution_patched_agents
+    must_not_touch:
+      - product_runtime
+      - business_data
+      - target_project_research_bodies
+
+  - layer_id: persona_anti_idolatry_humor
+    family: persona_fragment
+    version: "0.1"
+    source_path: 04_KITS/persona_fragments
+    install_scope: persona_prompts_only
+    authority: central
+    required_for:
+      - critique_agents
+      - writing_agents
+      - methodological_agents
+    must_not_touch:
+      - dry_runtime_guard
+      - hook_logic
+      - approval_enforcement

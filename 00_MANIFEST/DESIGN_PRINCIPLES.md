@@ -1,8 +1,8 @@
-﻿# DESIGN_PRINCIPLES
+# DESIGN_PRINCIPLES
 
 ## 1. Separate research archive from runtime context
 
-The full research archive belongs in protected-agent-kit.
+The full research archive belongs in Agentum.
 
 Target projects should receive compact install profiles, not the whole archive.
 
@@ -127,3 +127,66 @@ AGENTS.md, CLAUDE.md, SKILL.md, README files, prompt archives, and MCP descripti
 Recovery is not apology and not archive replay.
 
 Recovery must identify active project, loaded rules, protected values, recent trace, memory status, evidence gap, and next bounded action.
+
+## 19. Agent is organ, not just function
+
+An agent may execute functions, but its stable role is not reducible to a single tool call or one Python routine.
+
+Useful agent design preserves:
+
+- role;
+- scope;
+- lineage;
+- mutation history;
+- relation to other agents;
+- protected mode of intervention.
+
+This principle applies most strongly to persona, critique, methodological, recovery, and orchestration agents.
+
+## 20. Subject layer and runtime layer must stay distinct
+
+High ontology, agent constitution, persona morphology, and subject-bearing style are not the same thing as runtime guards.
+
+The subject layer gives the agent form, role, and mode of presence.
+
+The runtime layer gives the agent boundaries, approvals, routing, and failure containment.
+
+Neither layer should pretend to replace the other.
+
+## 21. Ontology sync must not rewrite project content
+
+When a project receives an updated ontology or persona layer, the update must target only the agent-evolution contour:
+
+- project-level agent prompts;
+- install slices;
+- local constitution fragments;
+- runtime-readable agent docs.
+
+It must not silently rewrite domain content, product logic, seed work, manuscripts, or target-project research artifacts.
+
+## 22. Ecosystem registry comes before mass rollout
+
+Before synchronizing a layer across multiple repositories, the system must know:
+
+- which repositories are in scope;
+- which layers are installed there;
+- which versions are active;
+- which layer is authoritative;
+- which repos are blocked, divergent, or local-experiment only.
+
+Mass update without registry knowledge is project bleed at scale.
+
+## 23. High ontology is not license for vagueness
+
+Agent ontology may be anti-reductionist, metaphysically dense, or explicitly esoteric in its own terms.
+
+That does not excuse slop.
+
+Every high-level layer must still answer:
+
+- what this agent is;
+- what it does;
+- what it must not do;
+- what input boundary it respects;
+- what kind of update it can receive;
+- how it coexists with runtime discipline.

@@ -1,6 +1,6 @@
 # CREATE_KIT_REPO
 
-Ты создаёшь standalone repository `protected-agent-kit`.
+Ты создаёшь standalone repository `Agentum`.
 
 Задача: собрать инфраструктурный repo для protected coding-agent work. Это не target repo и не runtime prompt dump.
 

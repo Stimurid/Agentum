@@ -1,6 +1,6 @@
 ﻿# GOLDEN_FORMULATIONS
 
-Reusable formulations extracted during the protected-agent-kit research waves.
+Reusable formulations extracted during the Agentum research waves.
 
 These are not all meant to be copied into runtime files at once.
 
@@ -245,7 +245,7 @@ The research archive is not runtime context.
 
 Target projects receive selected install profiles, not the whole archive.
 
-protected-agent-kit is the canonical source for research, registries, patterns, failure modes, v0 kits, install profiles, and handoff prompts.
+Agentum is the canonical source for research, registries, patterns, failure modes, v0 kits, install profiles, and handoff prompts.
 
 ## Project-specific formulations
 

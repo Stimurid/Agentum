@@ -28,7 +28,7 @@ Show insertion points separately for guard layer and persona layer.
 
 ## Approval gate
 
-Do not install automatically from `protected-agent-kit` without human review.
+Do not install automatically from `Agentum` without human review.
 
 ## Rollback plan
 

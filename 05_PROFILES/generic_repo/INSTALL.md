@@ -32,7 +32,7 @@ List target paths, proposed copied files, and expected local modifications befor
 
 ## Approval gate
 
-Do not install automatically from `protected-agent-kit` without human review and target confirmation.
+Do not install automatically from `Agentum` without human review and target confirmation.
 
 ## Rollback plan
 
